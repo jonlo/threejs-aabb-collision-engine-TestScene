@@ -61,12 +61,13 @@ function initScene() {
     //controls.update() must be called after any manual changes to the camera's transform
     controls.update();
 
-    var geometry = new THREE.BoxGeometry(1, 1, 1);
-    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    cube1 = new THREE.Mesh(geometry, material);
+    var geometry1 = new THREE.BoxGeometry(0.5, 10, 1);
+    var material1 = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    cube1 = new THREE.Mesh(geometry1, material1);
     scene.add(cube1);
-
-    cube2 = new THREE.Mesh(geometry, material);
+    var geometry2 = new THREE.BoxGeometry(1, 1, 1);
+    var material2 = new THREE.MeshBasicMaterial({ color: 0xff00ff });
+    cube2 = new THREE.Mesh(geometry2, material2);
     cube2.position.set(10, 0, 0);
     scene.add(cube2);
     colliders.push(cube1);
@@ -124,8 +125,13 @@ function RaycastHits(camera) {
 function translateCube() {
     if (oldMousePos) {
         var deltaMove = {
-            x: oldMousePos.x - mousePos.x,
+            x: oldMousePos.x - mousePos.x,   
+            y: oldMousePos.y - mousePos.y,
         };
-        selectedCube.position.x -= deltaMove.x * 10;
+        selectedCube.position.x -= deltaMove.x * 5;
+        selectedCube.position.y -= deltaMove.y * 5;
+        
+        checkCollisions(selectedCube,colliders,deltaMove);
     }
+ 
 }
