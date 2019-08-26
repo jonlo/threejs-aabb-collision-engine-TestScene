@@ -1,6 +1,6 @@
 
 
-function checkCollisions(object, collisionList,deltaMove) {
+function checkCollisions(object, collisionList, deltaMove) {
         object.updateMatrixWorld();
         updateBox(object);
         //See if exists colliding objects
@@ -13,16 +13,11 @@ function checkCollisions(object, collisionList,deltaMove) {
                 updateBox(collisionList[i]);
 
                 if (object.userData.box.intersectsBox(collideBox.userData.box)) {
-                        //      manageCollision(object.collision, collideBox.source.collision, callback);
-                        console.log("Collision");
-                        object.position.x += deltaMove.x * 5;
-                        object.position.y += deltaMove.y * 5;
+                        object.position.x += deltaMove.x;
+                        object.position.y += deltaMove.y;
                         return;
                 }
         }
-
-        //No collision nor snap. Update initial pos,rot,sca            
-       // initStates(object);
 }
 
 function sameObject(parent, son) {
@@ -41,7 +36,6 @@ function sameObject(parent, son) {
 }
 
 function updateBox(object) {
-
         var box = new THREE.Box3();
         box.setFromObject(object);
         object.userData.box = box;

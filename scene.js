@@ -11,8 +11,7 @@ var container,
     resetting,
     selectedCube;
 
-var mousePos = new THREE.Vector2();
-var oldMousePos = new THREE.Vector2();
+var oldPos = null;
 var colliders = [];
 var raycaster = new THREE.Raycaster();
 
@@ -28,10 +27,10 @@ function main() {
 function initScene() {
     // dom
     container = document.createElement('div');
+	window.addEventListener( 'resize', onWindowResize, false );
     container.addEventListener('mousedown', mouseDown);
     container.addEventListener('mousemove', mouseMove);
     container.addEventListener('mouseup', mouseUp);
-
     document.body.appendChild(container);
 
     // renderer
@@ -44,20 +43,9 @@ function initScene() {
     // camera
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.set(10, 10, 15);
+
     //controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.addEventListener('change', function (e) {
-        if (resetting)
-            return;
-        if (hitOnClick) {
-            resetting = true;
-            controls.reset();
-            resetting = false;
-        } else {
-            controls.saveState();
-        }
-    });
-
     //controls.update() must be called after any manual changes to the camera's transform
     controls.update();
 
@@ -78,6 +66,7 @@ function initScene() {
 function render() {
     renderer.render(scene, camera);
 }
+
 // animate            
 (function animate() {
     requestAnimationFrame(animate);
@@ -86,15 +75,20 @@ function render() {
 
 }());
 
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+}
 
 function mouseDown(e) {
-    intersects = RaycastHits(camera, container);
-    console.log(intersects.length);
+    var mousePos = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1,- (event.clientY / window.innerHeight) * 2 + 1);
+    intersects = RaycastHits(camera,mousePos);
     if (intersects.length > 0) {
         selectedCube = intersects[0].object;
         hitOnClick = true;
-    } else {
-        hitOnClick = false;
+        controls.enabled = false;
     }
 }
 
@@ -102,36 +96,46 @@ function mouseUp(e) {
     if (selectedCube) {
         selectedCube = null;
         hitOnClick = false;
+        oldPos = null;
+        controls.enabled = true;
     }
 }
 
 function mouseMove(e) {
-
-    mousePos.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mousePos.y = - (event.clientY / window.innerHeight) * 2 + 1;
     if (selectedCube) {
-        translateCube();
+        translateCube(e);
     }
-    oldMousePos.x = mousePos.x;
-    oldMousePos.y = mousePos.y;
 }
 
-function RaycastHits(camera) {
+function RaycastHits(camera,mousePos) {
     raycaster.setFromCamera(mousePos, camera);
     var intersects = raycaster.intersectObjects(colliders);
     return intersects;
 }
 
 function translateCube() {
-    if (oldMousePos) {
-        var deltaMove = {
-            x: oldMousePos.x - mousePos.x,   
-            y: oldMousePos.y - mousePos.y,
-        };
-        selectedCube.position.x -= deltaMove.x * 5;
-        selectedCube.position.y -= deltaMove.y * 5;
-        
-        checkCollisions(selectedCube,colliders,deltaMove);
+    var mousePos = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1,- (event.clientY / window.innerHeight) * 2 + 1);
+    var pos = getMousePositionInScene(mousePos);
+
+    if (!oldPos) {
+        oldPos = pos;
     }
- 
+    var deltaMove = {
+        x: oldPos.x - pos.x,
+        y: oldPos.y - pos.y,
+    };
+    selectedCube.position.x -= deltaMove.x;
+    selectedCube.position.y -= deltaMove.y;
+    checkCollisions(selectedCube, colliders, deltaMove);
+    oldPos = pos;
 }
+
+function getMousePositionInScene(mousePos){
+    var vector = new THREE.Vector3(mousePos.x, mousePos.y, 0);
+    vector.unproject(camera);
+    var dir = vector.sub(camera.position).normalize();
+    var distance = - camera.position.z / dir.z;
+    var pos = camera.position.clone().add(dir.multiplyScalar(distance));
+    return pos;
+}
+
