@@ -15,9 +15,10 @@ function checkCollisions(object, collisionList, deltaMove) {
                 if (object.userData.box.intersectsBox(collideBox.userData.box)) {
                         object.position.x += deltaMove.x;
                         object.position.y += deltaMove.y;
-                        return;
+                        return true;
                 }
         }
+        return false;
 }
 
 function sameObject(parent, son) {

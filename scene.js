@@ -27,7 +27,7 @@ function main() {
 function initScene() {
     // dom
     container = document.createElement('div');
-	window.addEventListener( 'resize', onWindowResize, false );
+    window.addEventListener('resize', onWindowResize, false);
     container.addEventListener('mousedown', mouseDown);
     container.addEventListener('mousemove', mouseMove);
     container.addEventListener('mouseup', mouseUp);
@@ -83,8 +83,8 @@ function onWindowResize() {
 }
 
 function mouseDown(e) {
-    var mousePos = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1,- (event.clientY / window.innerHeight) * 2 + 1);
-    intersects = RaycastHits(camera,mousePos);
+    var mousePos = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1);
+    intersects = RaycastHits(camera, mousePos);
     if (intersects.length > 0) {
         selectedCube = intersects[0].object;
         hitOnClick = true;
@@ -107,14 +107,14 @@ function mouseMove(e) {
     }
 }
 
-function RaycastHits(camera,mousePos) {
+function RaycastHits(camera, mousePos) {
     raycaster.setFromCamera(mousePos, camera);
     var intersects = raycaster.intersectObjects(colliders);
     return intersects;
 }
 
 function translateCube() {
-    var mousePos = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1,- (event.clientY / window.innerHeight) * 2 + 1);
+    var mousePos = new THREE.Vector2((event.clientX / window.innerWidth) * 2 - 1, - (event.clientY / window.innerHeight) * 2 + 1);
     var pos = getMousePositionInScene(mousePos);
 
     if (!oldPos) {
@@ -126,11 +126,19 @@ function translateCube() {
     };
     selectedCube.position.x -= deltaMove.x;
     selectedCube.position.y -= deltaMove.y;
-    checkCollisions(selectedCube, colliders, deltaMove);
+    if (checkCollisions(selectedCube, colliders, deltaMove)) {
+        var deltaMove = {
+            x: selectedCube.position.x - pos.x,
+            y: selectedCube.position.y - pos.y,
+        };
+        selectedCube.position.x -= deltaMove.x;
+        selectedCube.position.y -= deltaMove.y;
+        checkCollisions(selectedCube, colliders, deltaMove);
+    }
     oldPos = pos;
 }
 
-function getMousePositionInScene(mousePos){
+function getMousePositionInScene(mousePos) {
     var vector = new THREE.Vector3(mousePos.x, mousePos.y, 0);
     vector.unproject(camera);
     var dir = vector.sub(camera.position).normalize();
