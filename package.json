@@ -1,0 +1,29 @@
+{
+  "name": "CollisionEngine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonlo/CollisionEngine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonlo/CollisionEngine/issues"
+  },
+  "homepage": "https://github.com/jonlo/CollisionEngine#readme",
+  "devDependencies": {
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
+  },
+  "dependencies": {
+    "three": "^0.108.0"
+  }
+}
