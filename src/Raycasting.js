@@ -9,7 +9,7 @@ export class CollisionRaycaster {
 
     raycastHits  (camera, mousePos, colliders) {
         this.raycaster.setFromCamera(mousePos, camera);
-        var intersects = this.raycaster.intersectObjects(colliders);
+        let intersects = this.raycaster.intersectObjects(colliders);
         return intersects;
     }
 }

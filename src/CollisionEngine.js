@@ -1,16 +1,13 @@
 import * as THREE from 'three';
 
 export class CollisionEngine {
-        constructor() {
-
-        }
-
+        
         checkCollisions(object, collisionList, deltaMove) {
                 object.updateMatrixWorld();
                 this.updateBox(object);
                 //See if exists colliding objects
-                for (var i = 0; i < collisionList.length; i++) {
-                        var collideBox = collisionList[i];
+                for (let i = 0; i < collisionList.length; i++) {
+                        let collideBox = collisionList[i];
                         if (this.sameObject(object, collideBox))
                                 continue;
 
@@ -42,7 +39,7 @@ export class CollisionEngine {
         }
 
         updateBox(object) {
-                var box = new THREE.Box3();
+                let box = new THREE.Box3();
                 box.setFromObject(object);
                 object.userData.box = box;
         }
