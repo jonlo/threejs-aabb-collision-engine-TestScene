@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import {CollisionRaycaster} from './Raycasting.js';
-import {Transformer} from './Transformer.js';
+import { CollisionRaycaster } from './Raycasting.js';
+import { Transformer } from './CollisionEngine/Transformer.js';
 
 'use strict';
 
@@ -42,18 +42,17 @@ function initScene() {
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.set(10, 10, 15);
 
-    transformer = new Transformer(camera,colliders);
+    transformer = new Transformer(camera, colliders);
     //controls
     controls = new OrbitControls(camera, renderer.domElement);
     //controls.update() must be called after any manual changes to the camera's transform
     controls.update();
 
-    colliders.push(createCube(5,5, 5, 0xffff00));
-
+    colliders.push(createCube(5, 5, 5, 0xffff00));
 
     for (var index = 0; index < 5; index++) {
         colliders.push(createCube(0.5, 10, 1, 0x00ff00));
-        colliders[index+1].position.set(index*5, 0, 0);
+        colliders[index + 1].position.set(index * 5, 0, 0);
     }
 
 };
@@ -65,6 +64,7 @@ function createCube(width, height, depth, color) {
     scene.add(cube);
     return cube;
 }
+
 
 function render() {
     renderer.render(scene, camera);
@@ -107,4 +107,3 @@ function mouseMove(e) {
         transformer.translate(selectedCube, e);
     }
 }
-

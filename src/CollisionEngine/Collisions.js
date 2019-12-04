@@ -1,22 +1,24 @@
-import * as THREE from 'three';
+import { Box3 } from 'three';
 
-export class CollisionEngine {
-        
-        checkCollisions(object, collisionList, deltaMove) {
-                object.updateMatrixWorld();
+class Collisions {
+
+        checkCollisions(object, collisionList, deltaMove, axis) {
+                //object.updateMatrixWorld();
                 this.updateBox(object);
                 //See if exists colliding objects
                 for (let i = 0; i < collisionList.length; i++) {
                         let collideBox = collisionList[i];
-                        if (this.sameObject(object, collideBox))
+                        if (this.sameObject(object, collideBox)) {
                                 continue;
-
-                        //update collide box
+                        }
                         this.updateBox(collisionList[i]);
-
                         if (object.userData.box.intersectsBox(collideBox.userData.box)) {
-                                object.position.x += deltaMove.x;
-                                object.position.y += deltaMove.y;
+                                if (axis === "x") {
+                                        object.position.x += deltaMove.x;
+
+                                } else if (axis === "y") {
+                                        object.position.y += deltaMove.y;
+                                }
                                 return true;
                         }
                 }
@@ -31,16 +33,19 @@ export class CollisionEngine {
                 else {
                         for (var i = 0; i < parent.children.length; i++) {
                                 var sameObj = sameObject(parent.children[i], son);
-                                if (sameObj)
+                                if (sameObj) {
                                         return sameObj;
+                                }
                         }
                 }
                 return false;
         }
 
         updateBox(object) {
-                let box = new THREE.Box3();
+                let box = new Box3();
                 box.setFromObject(object);
                 object.userData.box = box;
         }
 }
+
+export { Collisions }
