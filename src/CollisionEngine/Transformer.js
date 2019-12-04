@@ -10,6 +10,7 @@ class Transformer {
         this.camera = camera;
         this.colliders = colliders;
         this.oldMousePos = null;
+        this.realPosition = null;
     }
 
     translate(object, e) {
@@ -19,26 +20,41 @@ class Transformer {
         if (!this.oldMousePos) {
             this.oldMousePos = mousePos;
         }
+        if (!this.realPosition) {
+            this.realPosition = object.position.clone();
+        }
         let deltaMove = {
             x: this.oldMousePos.x - mousePos.x,
             y: this.oldMousePos.y - mousePos.y,
         };
+
         object.position.x -= deltaMove.x;
-        
-        if (this.collisionEngine.checkCollisions(object, this.colliders, deltaMove, "x")) {
-            deltaMove.x = object.position.x - mousePos.x;
-            object.position.x -= deltaMove.x;
-            this.collisionEngine.checkCollisions(object, this.colliders, deltaMove, "x");
+        this.realPosition.x -= deltaMove.x;
+
+        if (this.collisionEngine.checkCollisions(object, this.colliders)) {
+            object.position.x += deltaMove.x;
+            let currentPos = new Vector3().copy(object.position);
+            object.position.set(this.realPosition.x, object.position.y, object.position.z);
+            if (this.collisionEngine.checkCollisions(object, this.colliders)) {
+                object.position.set(currentPos.x, currentPos.y, currentPos.z);
+            };
+        } else {
+            this.realPosition.setComponent(0, object.position.x);
         }
 
         object.position.y -= deltaMove.y;
-        console.log( `deltamoveY: ${deltaMove.y} `);
-        console.log( `object.position.y: ${object.position.y} `);
-        if (this.collisionEngine.checkCollisions(object, this.colliders, deltaMove, "y")) {
-            deltaMove.y = object.position.y - mousePos.y;
-            object.position.y -= deltaMove.y;
-            this.collisionEngine.checkCollisions(object, this.colliders, deltaMove, "y");
+        this.realPosition.y -= deltaMove.y;
+        if (this.collisionEngine.checkCollisions(object, this.colliders)) {
+            object.position.y += deltaMove.y;
+            let currentPos = new Vector3().copy(object.position);
+            object.position.set(object.position.x, this.realPosition.y, object.position.z);
+            if (this.collisionEngine.checkCollisions(object, this.colliders)) {
+                object.position.set(currentPos.x, currentPos.y, currentPos.z);
+            }
+        } else {
+            this.realPosition.setComponent(1, object.position.y);
         }
+
         this.oldMousePos = mousePos;
     }
 
@@ -53,6 +69,7 @@ class Transformer {
 
     reset() {
         this.oldMousePos = null;
+        this.realPosition = null;
     }
 
 }

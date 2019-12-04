@@ -2,10 +2,8 @@ import { Box3 } from 'three';
 
 class Collisions {
 
-        checkCollisions(object, collisionList, deltaMove, axis) {
-                //object.updateMatrixWorld();
+        checkCollisions(object, collisionList) {
                 this.updateBox(object);
-                //See if exists colliding objects
                 for (let i = 0; i < collisionList.length; i++) {
                         let collideBox = collisionList[i];
                         if (this.sameObject(object, collideBox)) {
@@ -13,12 +11,6 @@ class Collisions {
                         }
                         this.updateBox(collisionList[i]);
                         if (object.userData.box.intersectsBox(collideBox.userData.box)) {
-                                if (axis === "x") {
-                                        object.position.x += deltaMove.x;
-
-                                } else if (axis === "y") {
-                                        object.position.y += deltaMove.y;
-                                }
                                 return true;
                         }
                 }
