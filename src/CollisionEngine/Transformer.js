@@ -28,34 +28,27 @@ class Transformer {
             y: this.oldMousePos.y - mousePos.y,
         };
 
-        object.position.x -= deltaMove.x;
-        this.realPosition.x -= deltaMove.x;
+        this.translateAxis(0, object, deltaMove.x);
+        this.translateAxis(1, object, deltaMove.y);
+        
+        this.oldMousePos = mousePos;
+    }
+
+
+    translateAxis(axis, object, deltaMove) {
+        object.position.setComponent(axis,object.position.getComponent(axis)-deltaMove);
+        this.realPosition.setComponent(axis,this.realPosition.getComponent(axis)-deltaMove);
 
         if (this.collisionEngine.checkCollisions(object, this.colliders)) {
-            object.position.x += deltaMove.x;
+            object.position.setComponent(axis,object.position.getComponent(axis)+deltaMove);
             let currentPos = new Vector3().copy(object.position);
-            object.position.set(this.realPosition.x, object.position.y, object.position.z);
+            object.position.setComponent(axis,this.realPosition.getComponent(axis));
             if (this.collisionEngine.checkCollisions(object, this.colliders)) {
-                object.position.set(currentPos.x, currentPos.y, currentPos.z);
+                object.position.copy(currentPos);
             };
         } else {
-            this.realPosition.setComponent(0, object.position.x);
+            this.realPosition.setComponent(axis, object.position.getComponent(axis));
         }
-
-        object.position.y -= deltaMove.y;
-        this.realPosition.y -= deltaMove.y;
-        if (this.collisionEngine.checkCollisions(object, this.colliders)) {
-            object.position.y += deltaMove.y;
-            let currentPos = new Vector3().copy(object.position);
-            object.position.set(object.position.x, this.realPosition.y, object.position.z);
-            if (this.collisionEngine.checkCollisions(object, this.colliders)) {
-                object.position.set(currentPos.x, currentPos.y, currentPos.z);
-            }
-        } else {
-            this.realPosition.setComponent(1, object.position.y);
-        }
-
-        this.oldMousePos = mousePos;
     }
 
     getMousePositionInScene(mousePos) {
