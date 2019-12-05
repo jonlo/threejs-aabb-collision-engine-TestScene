@@ -7,16 +7,18 @@ class Collisions {
 
         checkCollisions(selectedObject) {
                 this._updateBoxes();
+                // console.log(`pos x ${selectedObject.position.x}`)
+                // console.log(`box ${selectedObject.userData.colliders[0].userData.box.min.x}`)
                 for (let i = 0; i < this.colliders.length; i++) {
                         let collisionObj = this.colliders[i];
-                        if (this.sameObject(selectedObject, collisionObj)) {
+                        if (this._sameObject(selectedObject, collisionObj)) {
                                 continue;
                         }
 
                         if (selectedObject instanceof Group) {
                                 for (let j = 0; j < selectedObject.userData.colliders.length; j++) {
                                         if (selectedObject.userData.colliders[j].userData.box.intersectsBox(collisionObj.userData.box)) {
-                                                console.log(`collided with ${collisionObj.name}`)
+                                                
                                                 return true;
                                         }
                                 }
@@ -47,22 +49,32 @@ class Collisions {
 
         _updateBoxes() {
                 this.colliders.forEach((collider) => {
-                        let box = new Box3();
-                        box.setFromObject(collider);
-                        collider.userData.box = box;
-                });
+                        if (collider instanceof Group) {
+                                collider.traverse((mesh) => {
+                                        if ((mesh instanceof Mesh)) {
+                                                let box = new Box3();
+                                                box.setFromObject(mesh);
+                                                mesh.userData.box = box;
+                                        }
+                                });
+                        } else {
+                                let box = new Box3();
+                                box.setFromObject(collider);
+                                collider.userData.box = box;
+                        }
 
+                });
 
         }
 
-        sameObject(parent, son) {
+        _sameObject(parent, son) {
                 if (parent === son)
                         return true;
                 else if (parent.children.length === 0)
                         return false;
                 else {
                         for (var i = 0; i < parent.children.length; i++) {
-                                var sameObj = this.sameObject(parent.children[i], son);
+                                var sameObj = this._sameObject(parent.children[i], son);
                                 if (sameObj) {
                                         return sameObj;
                                 }

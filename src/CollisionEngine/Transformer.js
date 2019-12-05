@@ -28,7 +28,7 @@ class Transformer {
         };
 
         this._translateAxis(0, object, deltaMove.x);
-      //  this._translateAxis(1, object, deltaMove.y);
+        this._translateAxis(1, object, deltaMove.y);
         this.oldMousePos = mousePos;
     }
 
@@ -40,16 +40,18 @@ class Transformer {
     _translateAxis(axis, object, deltaMove) {
         object.position.setComponent(axis, object.position.getComponent(axis) - deltaMove);
         this.realPosition.setComponent(axis, this.realPosition.getComponent(axis) - deltaMove);
-        console.log(`1 try to move ${object.name}`);
+       // console.log(`1 try to move ${object.name}`);
+       object.updateMatrixWorld();
         if (this.collisionEngine.checkCollisions(object)) {
             console.log(`collided in axis ${axis}`);
             object.position.setComponent(axis, object.position.getComponent(axis) + deltaMove);
-            // let currentPos = new Vector3().copy(object.position);
-            // object.position.setComponent(axis, this.realPosition.getComponent(axis));
-            // // console.log(`2 try to move ${object.name}`);
-            // if (this.collisionEngine.checkCollisions(object)) {
-            //     object.position.copy(currentPos);
-            // };
+            let currentPos = new Vector3().copy(object.position);
+            object.position.setComponent(axis, this.realPosition.getComponent(axis));
+            object.updateMatrixWorld();
+            console.log(`2 try to move ${this.realPosition.x}`);
+            if (this.collisionEngine.checkCollisions(object)) {
+                object.position.copy(currentPos);
+            };
         } else {
             this.realPosition.setComponent(axis, object.position.getComponent(axis));
         }
