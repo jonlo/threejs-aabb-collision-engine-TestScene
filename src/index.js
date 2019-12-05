@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { InputMouse } from './Input/InputMouse'
+import { Vector3 } from 'three';
 'use strict';
 
 var container,
@@ -58,6 +59,7 @@ function addElements() {
         for (let indexY = 0; indexY < 5; indexY++) {
             let cube = createCube(5, 5, 5, Math.random() * 0xffffff);
             cube.position.set((indexX * 5.01), (indexY * 5.01 +2.5), 0);
+            //cube.userData.margin = new Vector3(-1,0,0);
             scene.add(cube);
             inputMouse.transformer.collisionEngine.addCollider(cube);
         }

@@ -9,7 +9,11 @@ class InputMouse {
         this.raycaster = new Raycaster();
         this.oldMousePos = null;
         this.raycast = new Raycaster();
-        this.transformer = new Transformer(camera);
+        let transformerParams = {
+            camera: camera,
+            trackAfterCollision: true,
+        };
+        this.transformer = new Transformer(transformerParams);
         this.controls = controls;
         this.camera = camera;
         container.addEventListener('mousedown', (e) => { this._mouseDown(e) });
