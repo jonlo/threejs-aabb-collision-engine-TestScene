@@ -40,6 +40,7 @@ class Transformer {
         object.updateMatrixWorld();
         if (this.collisionEngine.checkCollisions(object)) {
             object.position.copy(currentPos);
+            object.updateMatrixWorld();
             this.collisionEngine.updateCollisionBox(object);
         };
     }

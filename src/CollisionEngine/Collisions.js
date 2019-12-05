@@ -12,7 +12,7 @@ class Collisions {
                         if (this._isSameObject(selectedObject, collisionObj)) {
                                 continue;
                         }
-                        if(!collisionObj.userData || !collisionObj.userData.box){
+                        if (!collisionObj.userData || !collisionObj.userData.box) {
                                 this.updateCollisionBox(collisionObj);
                         }
                         if (selectedObject instanceof Group) {
@@ -44,15 +44,12 @@ class Collisions {
                 } else {
                         throw "Only mesh or group colliders should be added";
                 }
-
         }
 
         updateCollisionBox(collider) {
                 if (collider instanceof Group) {
-                        collider.traverse((mesh) => {
-                                if ((mesh instanceof Mesh)) {
-                                        mesh.userData.box = new Box3().setFromObject(mesh);
-                                }
+                        collider.userData.colliders.forEach((mesh) => {
+                                mesh.userData.box = new Box3().setFromObject(mesh);
                         });
                 }
                 collider.userData.box = new Box3().setFromObject(collider);
