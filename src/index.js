@@ -58,8 +58,15 @@ function addElements() {
     for (let indexX = 0; indexX < 5; indexX++) {
         for (let indexY = 0; indexY < 5; indexY++) {
             let cube = createCube(5, 5, 5, Math.random() * 0xffffff);
-            cube.position.set((indexX * 5.01), (indexY * 5.01 +2.5), 0);
-            //cube.userData.margin = new Vector3(-1,0,0);
+            cube.position.set((indexX * 5.01), (indexY * 5.01 + 2.5), 0);
+            cube.userData.margin = {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                front: 0,
+                back: 0
+            };
             scene.add(cube);
             inputMouse.transformer.collisionEngine.addCollider(cube);
         }

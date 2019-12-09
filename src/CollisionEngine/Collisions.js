@@ -1,4 +1,4 @@
-import { Box3, Group, Mesh,Vector3 } from 'three';
+import { Box3, Group, Mesh, Vector3 } from 'three';
 
 class Collisions {
         constructor() {
@@ -47,22 +47,28 @@ class Collisions {
         }
 
         updateCollisionBox(collider) {
-
                 if (collider instanceof Group) {
                         collider.userData.colliders.forEach((mesh) => {
-                                let margin = mesh.userData.margin ? mesh.userData.margin : new Vector3(0, 0, 0);
+                                let margin = mesh.userData.margin ? mesh.userData.margin : {
+                                        left: 0,
+                                        right: 0,
+                                        top: 0,
+                                        bottom: 0,
+                                        front: 0,
+                                        back: 0
+                                };
 
                                 mesh.userData.box = new Box3().setFromObject(mesh);
-                                mesh.userData.box.min.set(mesh.userData.box.min.x + margin.x, mesh.userData.box.min.y + margin.y, mesh.userData.box.min.z + margin.z);
-                                mesh.userData.box.max.set(mesh.userData.box.max.x - margin.x, mesh.userData.box.max.y - margin.y, mesh.userData.box.max.z - margin.z);
+                                mesh.userData.box.min.set(mesh.userData.box.min.x - margin.left, mesh.userData.box.min.y - margin.bottom, mesh.userData.box.min.z - margin.front);
+                                mesh.userData.box.max.set(mesh.userData.box.max.x + margin.right, mesh.userData.box.max.y + margin.top, mesh.userData.box.max.z + margin.back);
 
                         });
                 }
                 let margin = collider.userData.margin ? collider.userData.margin : new Vector3(0, 0, 0);
 
                 collider.userData.box = new Box3().setFromObject(collider);
-                collider.userData.box.min.set(collider.userData.box.min.x + margin.x, collider.userData.box.min.y + margin.y, collider.userData.box.min.z + margin.z);
-                collider.userData.box.max.set(collider.userData.box.max.x - margin.x, collider.userData.box.max.y - margin.y, collider.userData.box.max.z - margin.z);
+                collider.userData.box.min.set(collider.userData.box.min.x - margin.left, collider.userData.box.min.y - margin.bottom, collider.userData.box.min.z - margin.front);
+                collider.userData.box.max.set(collider.userData.box.max.x + margin.right, collider.userData.box.max.y + margin.top, collider.userData.box.max.z + margin.back);
         }
 
         _isSameObject(parent, son) {

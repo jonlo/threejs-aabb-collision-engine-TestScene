@@ -18,7 +18,7 @@ class Transformer {
         if (!this.realPosition) {
             this.realPosition = object.position.clone();
         }
-        let margin = object.userData.margin ? object.userData.margin.getComponent(axis): new Vector3(0,0,0);
+       
         let snap = object.userData.snap ? object.userData.snap.getComponent(axis): new Vector3(0,0,0);
 
         object.position.setComponent(axis, object.position.getComponent(axis) - deltaMove);
