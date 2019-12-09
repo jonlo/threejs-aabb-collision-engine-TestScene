@@ -47,17 +47,17 @@ function addElements() {
     let cubeA = createCube(10, 5, 5, 0x00ffff);
     let cubeB = createCube(5, 5, 5, 0x00ffff);
     cubeB.position.set(-2.5, 5, 0);
-    var group = new THREE.Group();
-    group.add(cubeA);
-    group.add(cubeB);
-    group.name = "tetris";
-    group.position.set(-10, 2.5, 0);
-    inputMouse.transformer.collisionEngine.addCollider(group);
-    scene.add(group);
+    // var group = new THREE.Group();
+    // group.add(cubeA);
+    // group.add(cubeB);
+    // group.name = "tetris";
+    // group.position.set(-10, 2.5, 0);
+    // inputMouse.transformer.collisionEngine.addCollider(group);
+    // scene.add(group);
 
     for (let indexX = 0; indexX < 5; indexX++) {
-        for (let indexY = 0; indexY < 5; indexY++) {
-            let cube = createCube(5, 5, 5, Math.random() * 0xffffff);
+        for (let indexY = 0; indexY < 5; indexY++) {//Math.random() * 
+            let cube = createCube(5, 5, 5, 0x00ff00);
             cube.position.set((indexX * 5.01), (indexY * 5.01 + 2.5), 0);
             cube.userData.margin = {
                 left: 0,
@@ -67,6 +67,7 @@ function addElements() {
                 front: 0,
                 back: 0
             };
+            cube.name = `cube_${indexX}_${indexY}`;
             scene.add(cube);
             inputMouse.transformer.collisionEngine.addCollider(cube);
         }

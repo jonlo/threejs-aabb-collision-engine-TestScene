@@ -12,6 +12,7 @@ class InputMouse {
         let transformerParams = {
             camera: camera,
             trackAfterCollision: true,
+            snapDistance: 1
         };
         this.transformer = new Transformer(transformerParams);
         this.controls = controls;
