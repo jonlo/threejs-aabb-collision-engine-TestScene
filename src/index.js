@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { InputMouse } from './Input/InputMouse'
-import { Vector3 } from 'three';
+import { TransformData } from './CollisionEngine/TransformData'
 'use strict';
 
 var container,
@@ -54,72 +54,10 @@ function addElements() {
     group.position.set(-10, 2.5, 0);
     inputMouse.transformer.collisionEngine.addCollider(group);
     scene.add(group);
-    group.userData.transform = {
-        margin: null,
-        restrictions: {
-            position: {
-                x: NaN,
-                y: NaN,
-                z: NaN
-            },
-            rotation: {
-                x: NaN,
-                y: NaN,
-                z: NaN
-            },
-            scale: {
-                x: NaN,
-                y: NaN,
-                z: NaN
-            }
-        },
-        padding: null,
-    }
-
-    group.userData.transform.margin = {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        front: 0,
-        back: 0
-    };
-
     for (let indexX = 0; indexX < 50; indexX++) {
         for (let indexY = 0; indexY < 50; indexY++) {//Math.random() * 
             let cube = createCube(5, 5, 5, 0x00ff00);
             cube.position.set((indexX * 5.01), (indexY * 5.01 + 2.5), 0);
-
-            cube.userData.transform = {
-                margin: null,
-                restrictions: {
-                    position: {
-                        x: NaN,
-                        y: NaN,
-                        z: NaN
-                    },
-                    rotation: {
-                        x: NaN,
-                        y: NaN,
-                        z: NaN
-                    },
-                    scale: {
-                        x: NaN,
-                        y: NaN,
-                        z: NaN
-                    }
-                },
-                padding: null,
-            }
-
-            cube.userData.transform.margin = {
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                front: 0,
-                back: 0
-            };
             cube.name = `cube_${indexX}_${indexY}`;
             scene.add(cube);
             inputMouse.transformer.collisionEngine.addCollider(cube);
