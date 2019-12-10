@@ -85,7 +85,7 @@ class Collisions {
                                 let distanceY = Math.abs((selectedObject.position.y - collider.position.y) - (selectedBox.max.y - selectedBox.min.y) / 2
                                         + (colliderBox.max.y - colliderBox.min.y) / 2) - (selectedBox.max.y - selectedBox.min.y);
                                 let distanceZ = Math.abs((selectedObject.position.z - collider.position.z) - (selectedBox.max.z - selectedBox.min.z) / 2
-                                        + (colliderBox.max.z - colliderBox.min.z) / 2) ;
+                                        + (colliderBox.max.z - colliderBox.min.z) / 2);
 
                                 let distance = distanceX + distanceY + distanceZ;
                                 if (!closest.element || closest.distances.reduce((a, b) => a + b, 0) > distance) {
@@ -95,10 +95,8 @@ class Collisions {
                                         closest.distances[2] = distanceZ;
                                 }
                         }
-
                         collider.material.color.set(0x00ff00);
                 });
-                //   console.log(`closest element: ${closest.element.name} distanceX: ${closest.distances[0]} distanceY: ${closest.distances[1]} distanceZ: ${closest.distances[2]}`);
                 closest.element.material.color.set(0xff0000);
                 return closest;
         }

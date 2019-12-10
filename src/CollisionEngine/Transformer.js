@@ -4,7 +4,7 @@ import { Vector3 } from 'three';
 import { Collisions } from './Collisions.js'
 
 const snapScape = 0.3;
-const snapMargin = 0.025;
+const snapMargin = 0.005;
 
 class Transformer {
 
@@ -14,6 +14,7 @@ class Transformer {
         this.camera = params.camera;
         this.collisionEngine = new Collisions();
         this.realPosition = null;
+        this.collisionsEnabled = true;
     }
 
     translate(object, axis, deltaMove) {
@@ -27,15 +28,16 @@ class Transformer {
             object.updateMatrixWorld();
             this.realPosition.setComponent(axis, this.realPosition.getComponent(axis) - deltaMove);
         }
-
-        if (this.collisionEngine.checkCollisions(object)) {
-            object.position.setComponent(axis, object.position.getComponent(axis) + deltaMove);
-            this.collisionEngine.updateCollisionBox(object);
-            if (this.trackAfterCollision) {
-                this._tryToRelocateObject(object, axis);
+        if (this.collisionsEnabled) {
+            if (this.collisionEngine.checkCollisions(object)) {
+                object.position.setComponent(axis, object.position.getComponent(axis) + deltaMove);
+                this.collisionEngine.updateCollisionBox(object);
+                if (this.trackAfterCollision) {
+                    this._tryToRelocateObject(object, axis);
+                }
+            } else {
+                this.realPosition.setComponent(axis, object.position.getComponent(axis));
             }
-        } else {
-            this.realPosition.setComponent(axis, object.position.getComponent(axis));
         }
     }
 
