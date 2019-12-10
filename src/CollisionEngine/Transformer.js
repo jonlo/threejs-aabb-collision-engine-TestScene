@@ -5,7 +5,6 @@ import { Collisions } from './Collisions.js'
 import { restrict } from './Restrictions'
 import { snap } from './Snap'
 
-
 class Transformer {
 
     constructor(params) {

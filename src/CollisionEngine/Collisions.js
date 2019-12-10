@@ -1,32 +1,15 @@
-import { Box3, Group, Mesh, Vector3 } from 'three';
-import {getClosestDistanceBetweenObjects } from './Snap'
+import { Group, Mesh } from 'three';
+import { getClosestDistanceBetweenObjects } from './Snap'
+import { isSameObject, tryToUpdateObject, updateBox } from './CollisionUpdates'
 
 class Collisions {
+        
         constructor() {
                 this.meshColliders = [];
         }
 
-        checkCollisions(selectedObject) {
-                this.updateCollisionBox(selectedObject);
-                for (let i = 0; i < this.meshColliders.length; i++) {
-                        let collisionObj = this.meshColliders[i];
-                        if (this._isSameObject(selectedObject, collisionObj)) {
-                                continue;
-                        }
-                        this._tryToUpdateObject(collisionObj);
-                        if (selectedObject instanceof Group) {
-                                for (let j = 0; j < selectedObject.userData.colliders.length; j++) {
-                                        if (selectedObject.userData.colliders[j].userData.box.intersectsBox(collisionObj.userData.box)) {
-                                                return true;
-                                        }
-                                }
-                        } else {
-                                if (selectedObject.userData.box.intersectsBox(collisionObj.userData.box)) {
-                                        return true;
-                                }
-                        }
-                }
-                return false;
+        updateCollisionBox(collider) {
+                updateBox(collider);
         }
 
         addCollider(collider) {
@@ -46,26 +29,39 @@ class Collisions {
                 }
         }
 
-        updateCollisionBox(collider) {
-                if (collider instanceof Group) {
-                        collider.userData.colliders.forEach((mesh) => {
-                                this._updateCollider(mesh);
-                        });
-                } else {
-                        this._updateCollider(collider);
+        checkCollisions(selectedObject) {
+                updateBox(selectedObject);
+                for (let i = 0; i < this.meshColliders.length; i++) {
+                        let collisionObj = this.meshColliders[i];
+                        if (isSameObject(selectedObject, collisionObj)) {
+                                continue;
+                        }
+                        tryToUpdateObject(collisionObj);
+                        if (selectedObject instanceof Group) {
+                                for (let j = 0; j < selectedObject.userData.colliders.length; j++) {
+                                        if (selectedObject.userData.colliders[j].userData.box.intersectsBox(collisionObj.userData.box)) {
+                                                return true;
+                                        }
+                                }
+                        } else {
+                                if (selectedObject.userData.box.intersectsBox(collisionObj.userData.box)) {
+                                        return true;
+                                }
+                        }
                 }
+                return false;
         }
 
         getClosestElement(selectedObject) {
-                this._tryToUpdateObject(selectedObject);
+                tryToUpdateObject(selectedObject);
                 let closest = {
                         distances: [],
                         element: null
                 };
 
                 this.meshColliders.forEach(collider => {
-                        if (!this._isSameObject(selectedObject, collider)) {
-                                this._tryToUpdateObject(collider);
+                        if (!isSameObject(selectedObject, collider)) {
+                                tryToUpdateObject(collider);
                                 let distances = { distanceX: 0, distanceY: 0, distanceZ: 0 };
                                 distances = getClosestDistanceBetweenObjects(selectedObject, collider);
                                 let distance = distances.distanceX + distances.distanceY + distances.distanceZ;
@@ -82,45 +78,6 @@ class Collisions {
                 return closest;
         }
 
-        _updateCollider(collider) {
-                let margin = collider.userData.isChild ? this._getMarginForObject(collider.parent) : this._getMarginForObject(collider);
-                collider.userData.box = new Box3().setFromObject(collider);
-                collider.userData.box.min.set(collider.userData.box.min.x - margin.left, collider.userData.box.min.y - margin.bottom, collider.userData.box.min.z - margin.front);
-                collider.userData.box.max.set(collider.userData.box.max.x + margin.right, collider.userData.box.max.y + margin.top, collider.userData.box.max.z + margin.back);
-        }
-
-        _getMarginForObject(object) {
-                return object.userData.transform.margin ? object.userData.transform.margin : {
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                        front: 0,
-                        back: 0
-                };
-        }
-
-        _tryToUpdateObject(collisionObj) {
-                if (!collisionObj.userData || !collisionObj.userData.box) {
-                        this.updateCollisionBox(collisionObj);
-                }
-        }
-
-        _isSameObject(parent, son) {
-                if (parent === son)
-                        return true;
-                else if (parent.children.length === 0)
-                        return false;
-                else {
-                        for (var i = 0; i < parent.children.length; i++) {
-                                var sameObj = this._isSameObject(parent.children[i], son);
-                                if (sameObj) {
-                                        return sameObj;
-                                }
-                        }
-                }
-                return false;
-        }
 }
 
 export { Collisions }
