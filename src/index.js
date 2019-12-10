@@ -85,8 +85,8 @@ function addElements() {
         back: 0
     };
 
-    for (let indexX = 0; indexX < 5; indexX++) {
-        for (let indexY = 0; indexY < 5; indexY++) {//Math.random() * 
+    for (let indexX = 0; indexX < 50; indexX++) {
+        for (let indexY = 0; indexY < 50; indexY++) {//Math.random() * 
             let cube = createCube(5, 5, 5, 0x00ff00);
             cube.position.set((indexX * 5.01), (indexY * 5.01 + 2.5), 0);
 

@@ -1,4 +1,5 @@
 import { Group, Vector3 } from 'three';
+
 const SNAP_SCAPE = 0.3;
 const SNAP_MARGIN = 0.005;
 
@@ -36,9 +37,9 @@ export function getClosestDistanceBetweenObjects(selectedObject, collider) {
 }
 
 function setDistancesBetweenObjects(selectedElement, collider, distancesX, distancesY, distancesZ) {
-    var selectedWorldPos = new Vector3();
+    let selectedWorldPos = new Vector3();
     selectedWorldPos.setFromMatrixPosition(selectedElement.matrixWorld);
-    var colliderWorldPos = new Vector3();
+    let colliderWorldPos = new Vector3();
     colliderWorldPos.setFromMatrixPosition(collider.matrixWorld);
     let colliderBox = collider.userData.box;
     let selectedBox = selectedElement.userData.box;

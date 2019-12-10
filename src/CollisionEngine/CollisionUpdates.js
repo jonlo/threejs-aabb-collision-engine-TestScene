@@ -6,8 +6,8 @@ export function isSameObject(parent, son) {
     else if (parent.children.length === 0)
         return false;
     else {
-        for (var i = 0; i < parent.children.length; i++) {
-            var sameObj = this._isSameObject(parent.children[i], son);
+        for (let i = 0; i < parent.children.length; i++) {
+            let sameObj = isSameObject(parent.children[i], son);
             if (sameObj) {
                 return sameObj;
             }
