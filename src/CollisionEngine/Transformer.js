@@ -52,16 +52,6 @@ class Transformer {
     }
 
     _checkObjectData(object) {
-        if (object instanceof Group) {
-            object.userData.colliders.forEach((mesh) => {
-                this._initObjectData(mesh);
-            });
-        } else {
-            this._initObjectData(object);
-        }
-    }
-
-    _initObjectData(object) {
         if (!object.userData.transform) {
             object.userData.transform = {
                 margin: null,
@@ -86,6 +76,7 @@ class Transformer {
             }
         }
     }
+
     _tryToRelocateObject(object, axis) {
         let currentPos = new Vector3().copy(object.position);
         object.position.setComponent(axis, this.realPosition.getComponent(axis));

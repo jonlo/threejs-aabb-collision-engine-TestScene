@@ -47,13 +47,43 @@ function addElements() {
     let cubeA = createCube(10, 5, 5, 0x00ffff);
     let cubeB = createCube(5, 5, 5, 0x00ffff);
     cubeB.position.set(-2.5, 5, 0);
-    // var group = new THREE.Group();
-    // group.add(cubeA);
-    // group.add(cubeB);
-    // group.name = "tetris";
-    // group.position.set(-10, 2.5, 0);
-    // inputMouse.transformer.collisionEngine.addCollider(group);
-    // scene.add(group);
+    var group = new THREE.Group();
+    group.add(cubeA);
+    group.add(cubeB);
+    group.name = "tetris";
+    group.position.set(-10, 2.5, 0);
+    inputMouse.transformer.collisionEngine.addCollider(group);
+    scene.add(group);
+    group.userData.transform = {
+        margin: null,
+        restrictions: {
+            position: {
+                x: NaN,
+                y: NaN,
+                z: NaN
+            },
+            rotation: {
+                x: NaN,
+                y: NaN,
+                z: NaN
+            },
+            scale: {
+                x: NaN,
+                y: NaN,
+                z: NaN
+            }
+        },
+        padding: null,
+    }
+
+    group.userData.transform.margin = {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        front: 0,
+        back: 0
+    };
 
     for (let indexX = 0; indexX < 5; indexX++) {
         for (let indexY = 0; indexY < 5; indexY++) {//Math.random() * 
