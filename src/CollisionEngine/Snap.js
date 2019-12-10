@@ -24,7 +24,7 @@ export function getClosestDistanceBetweenObjects(selectedObject, collider) {
     let distancesZ = [];
     if (selectedObject instanceof Group) {
         selectedObject.updateMatrixWorld();
-        selectedObject.userData.colliders.forEach((mesh) => {
+        selectedObject.userData.transformData.colliders.forEach((mesh) => {
             setDistancesBetweenObjects(mesh, collider, distancesX, distancesY, distancesZ);
         });
     } else {
@@ -41,8 +41,8 @@ function setDistancesBetweenObjects(selectedElement, collider, distancesX, dista
     selectedWorldPos.setFromMatrixPosition(selectedElement.matrixWorld);
     let colliderWorldPos = new Vector3();
     colliderWorldPos.setFromMatrixPosition(collider.matrixWorld);
-    let colliderBox = collider.userData.box;
-    let selectedBox = selectedElement.userData.box;
+    let colliderBox = collider.userData.transformData.box;
+    let selectedBox = selectedElement.userData.transformData.box;
     distancesX.push(Math.abs((selectedWorldPos.x - colliderWorldPos.x) - (selectedBox.max.x - selectedBox.min.x) / 2
         + (colliderBox.max.x - colliderBox.min.x) / 2) - (selectedBox.max.x - selectedBox.min.x));
     distancesY.push(Math.abs((selectedWorldPos.y - colliderWorldPos.y) - (selectedBox.max.y - selectedBox.min.y) / 2

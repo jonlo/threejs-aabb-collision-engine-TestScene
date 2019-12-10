@@ -18,20 +18,20 @@ export function isSameObject(parent, son) {
 
 export function updateCollider(collider) {
     let margin = collider.userData.isChild ? _getMarginForObject(collider.parent) : _getMarginForObject(collider);
-    collider.userData.box = new Box3().setFromObject(collider);
-    collider.userData.box.min.set(collider.userData.box.min.x - margin.left, collider.userData.box.min.y - margin.bottom, collider.userData.box.min.z - margin.front);
-    collider.userData.box.max.set(collider.userData.box.max.x + margin.right, collider.userData.box.max.y + margin.top, collider.userData.box.max.z + margin.back);
+    collider.userData.transformData.setBox(collider);
+    collider.userData.transformData.box.min.set(collider.userData.transformData.box.min.x - margin.left, collider.userData.transformData.box.min.y - margin.bottom, collider.userData.transformData.box.min.z - margin.front);
+    collider.userData.transformData.box.max.set(collider.userData.transformData.box.max.x + margin.right, collider.userData.transformData.box.max.y + margin.top, collider.userData.transformData.box.max.z + margin.back);
 }
 
 export function tryToUpdateObject(collisionObj) {
-    if (!collisionObj.userData || !collisionObj.userData.box) {
+    if (!collisionObj.userData.transformData || !collisionObj.userData.transformData.box) {
         updateBox(collisionObj);
     }
 }
 
 export function updateBox(collider) {
     if (collider instanceof Group) {
-        collider.userData.colliders.forEach((mesh) => {
+        collider.userData.transformData.colliders.forEach((mesh) => {
             updateCollider(mesh);
         });
     } else {
@@ -40,7 +40,7 @@ export function updateBox(collider) {
 }
 
 function _getMarginForObject(object) {
-    return object.userData.transform.margin ? object.userData.transform.margin : {
+    return object.userData.transformData.margin ? object.userData.transformData.margin : {
         left: 0,
         right: 0,
         top: 0,

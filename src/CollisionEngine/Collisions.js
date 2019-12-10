@@ -1,9 +1,10 @@
 import { Group, Mesh } from 'three';
 import { getClosestDistanceBetweenObjects } from './Snap'
 import { isSameObject, tryToUpdateObject, updateBox } from './CollisionUpdates'
+import { TransformData } from './TransformData';
 
 class Collisions {
-        
+
         constructor() {
                 this.meshColliders = [];
         }
@@ -13,13 +14,19 @@ class Collisions {
         }
 
         addCollider(collider) {
+                if (!collider.userData.transformData) {
+                        collider.userData.transformData = new TransformData();
+                }
                 if (collider instanceof Group) {
-                        collider.userData.colliders = [];
+
                         collider.traverse((mesh) => {
                                 if ((mesh instanceof Mesh)) {
-                                        mesh.userData.isChild = true;
+                                        if (!mesh.userData.transformData) {
+                                                mesh.userData.transformData = new TransformData();
+                                                mesh.userData.transformData.setAsChild();
+                                        }
                                         this.meshColliders.push(mesh);
-                                        collider.userData.colliders.push(mesh);
+                                        collider.userData.transformData.colliders.push(mesh);
                                 }
                         });
                 } else if (collider instanceof Mesh) {
@@ -38,13 +45,13 @@ class Collisions {
                         }
                         tryToUpdateObject(collisionObj);
                         if (selectedObject instanceof Group) {
-                                for (let j = 0; j < selectedObject.userData.colliders.length; j++) {
-                                        if (selectedObject.userData.colliders[j].userData.box.intersectsBox(collisionObj.userData.box)) {
+                                for (let j = 0; j < selectedObject.userData.transformData.colliders.length; j++) {
+                                        if (selectedObject.userData.transformData.colliders[j].userData.transformData.box.intersectsBox(collisionObj.userData.transformData.box)) {
                                                 return true;
                                         }
                                 }
                         } else {
-                                if (selectedObject.userData.box.intersectsBox(collisionObj.userData.box)) {
+                                if (selectedObject.userData.transformData.box.intersectsBox(collisionObj.userData.transformData.box)) {
                                         return true;
                                 }
                         }
@@ -58,7 +65,6 @@ class Collisions {
                         distances: [],
                         element: null
                 };
-
                 this.meshColliders.forEach(collider => {
                         if (!isSameObject(selectedObject, collider)) {
                                 tryToUpdateObject(collider);

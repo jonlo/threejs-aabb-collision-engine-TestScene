@@ -1,7 +1,7 @@
 const AXES = ['x', 'y', 'z'];
 
 export function restrict(object, axis) {
-    let restrictions = object.userData.transform.restrictions;
+    let restrictions = object.userData.transformData.restrictions;
     if (restrictions.position && !isNaN(restrictions.position[AXES[axis]])) {
         object.position.setComponent(axis, restrictions.position[AXES[axis]]);
     }

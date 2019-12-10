@@ -4,6 +4,7 @@ import { Vector3, Group } from 'three';
 import { Collisions } from './Collisions.js'
 import { restrict } from './Restrictions'
 import { snap } from './Snap'
+import { TransformData } from './TransformData.js';
 
 class Transformer {
 
@@ -17,7 +18,7 @@ class Transformer {
     }
 
     translate(object, axis, deltaMove) {
-        this._checkObjectData(object);
+        this._checkTransformData(object);
         if (!this.realPosition) {
             this.realPosition = object.position.clone();
         }
@@ -50,29 +51,9 @@ class Transformer {
         this.realPosition = null;
     }
 
-    _checkObjectData(object) {
-        if (!object.userData.transform) {
-            object.userData.transform = {
-                margin: null,
-                restrictions: {
-                    position: {
-                        x: NaN,
-                        y: NaN,
-                        z: NaN
-                    },
-                    rotation: {
-                        x: NaN,
-                        y: NaN,
-                        z: NaN
-                    },
-                    scale: {
-                        x: NaN,
-                        y: NaN,
-                        z: NaN
-                    }
-                },
-                padding: null,
-            }
+    _checkTransformData(object) {
+        if (!object.userData.transformData) {
+            object.userData.transformData = new TransformData();
         }
     }
 
