@@ -1,10 +1,10 @@
 'strict mode'
 
-import { Vector3 } from 'three';
+import { Vector3, Group } from 'three';
 import { Collisions } from './Collisions.js'
+import { restrict } from './Restrictions'
+import { snap } from './Snap'
 
-const snapScape = 0.3;
-const snapMargin = 0.005;
 
 class Transformer {
 
@@ -18,10 +18,15 @@ class Transformer {
     }
 
     translate(object, axis, deltaMove) {
+        this._checkObjectData(object);
         if (!this.realPosition) {
             this.realPosition = object.position.clone();
         }
-        let snapped = this._snap(object, axis, deltaMove) === axis;
+        let snapped = false;
+        if (this.snapDistance > 0) {
+            snapped = snap(object, this.collisionEngine.getClosestElement(object), axis, deltaMove, this.snapDistance) === axis;
+        }
+
         object.updateMatrixWorld();
         if (!snapped) {
             object.position.setComponent(axis, object.position.getComponent(axis) - deltaMove);
@@ -39,31 +44,48 @@ class Transformer {
                 this.realPosition.setComponent(axis, object.position.getComponent(axis));
             }
         }
+        restrict(object, axis);
     }
 
     reset() {
-        this.snapped = [false, false, false];
         this.realPosition = null;
     }
 
-    _snap(object, movingAxis, deltaMove) {
-        if (this.snapDistance > 0) {
-            let closest = this.collisionEngine.getClosestElement(object);
-            let distance = closest.distances.reduce(function (prev, curr) {
-                return (Math.abs(curr - 0) < Math.abs(prev - 0 && curr > 0) ? curr : prev);
+    _checkObjectData(object) {
+        if (object instanceof Group) {
+            object.userData.colliders.forEach((mesh) => {
+                this._initObjectData(mesh);
             });
-            let axis = closest.distances.indexOf(distance);
-            let dir = deltaMove < 0 ? -1 : 1;
-            let correctDistances = closest.distances.filter(d => d < this.snapDistance).length;
-            if (correctDistances > 2 && distance >= snapScape) {
-                if (movingAxis === axis) {
-                    object.position.setComponent(axis, object.position.getComponent(axis) - (distance - snapMargin) * dir);
-                    return movingAxis;
-                }
-            }
+        } else {
+            this._initObjectData(object);
         }
     }
 
+    _initObjectData(object) {
+        if (!object.userData.transform) {
+            object.userData.transform = {
+                margin: null,
+                restrictions: {
+                    position: {
+                        x: NaN,
+                        y: NaN,
+                        z: NaN
+                    },
+                    rotation: {
+                        x: NaN,
+                        y: NaN,
+                        z: NaN
+                    },
+                    scale: {
+                        x: NaN,
+                        y: NaN,
+                        z: NaN
+                    }
+                },
+                padding: null,
+            }
+        }
+    }
     _tryToRelocateObject(object, axis) {
         let currentPos = new Vector3().copy(object.position);
         object.position.setComponent(axis, this.realPosition.getComponent(axis));

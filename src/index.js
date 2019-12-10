@@ -59,7 +59,30 @@ function addElements() {
         for (let indexY = 0; indexY < 5; indexY++) {//Math.random() * 
             let cube = createCube(5, 5, 5, 0x00ff00);
             cube.position.set((indexX * 5.01), (indexY * 5.01 + 2.5), 0);
-            cube.userData.margin = {
+
+            cube.userData.transform = {
+                margin: null,
+                restrictions: {
+                    position: {
+                        x: NaN,
+                        y: NaN,
+                        z: NaN
+                    },
+                    rotation: {
+                        x: NaN,
+                        y: NaN,
+                        z: NaN
+                    },
+                    scale: {
+                        x: NaN,
+                        y: NaN,
+                        z: NaN
+                    }
+                },
+                padding: null,
+            }
+
+            cube.userData.transform.margin = {
                 left: 0,
                 right: 0,
                 top: 0,

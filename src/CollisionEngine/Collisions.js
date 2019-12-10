@@ -1,5 +1,4 @@
 import { Box3, Group, Mesh, Vector3 } from 'three';
-import { distanceBetweenTwoLines } from './distanceBetweenTwoLines'
 
 class Collisions {
         constructor() {
@@ -43,12 +42,13 @@ class Collisions {
                 } else {
                         throw "Only mesh or group colliders should be added";
                 }
+
         }
 
         updateCollisionBox(collider) {
                 if (collider instanceof Group) {
                         collider.userData.colliders.forEach((mesh) => {
-                                let margin = mesh.userData.margin ? mesh.userData.margin : {
+                                let margin = mesh.userData.transform.margin ? mesh.userData.transform.margin : {
                                         left: 0,
                                         right: 0,
                                         top: 0,
@@ -56,17 +56,18 @@ class Collisions {
                                         front: 0,
                                         back: 0
                                 };
-
                                 mesh.userData.box = new Box3().setFromObject(mesh);
                                 mesh.userData.box.min.set(mesh.userData.box.min.x - margin.left, mesh.userData.box.min.y - margin.bottom, mesh.userData.box.min.z - margin.front);
                                 mesh.userData.box.max.set(mesh.userData.box.max.x + margin.right, mesh.userData.box.max.y + margin.top, mesh.userData.box.max.z + margin.back);
 
                         });
+                } else {
+                        let margin = collider.userData.transform.margin ? collider.userData.transform.margin : new Vector3(0, 0, 0);
+                        collider.userData.box = new Box3().setFromObject(collider);
+                        collider.userData.box.min.set(collider.userData.box.min.x - margin.left, collider.userData.box.min.y - margin.bottom, collider.userData.box.min.z - margin.front);
+                        collider.userData.box.max.set(collider.userData.box.max.x + margin.right, collider.userData.box.max.y + margin.top, collider.userData.box.max.z + margin.back);
                 }
-                let margin = collider.userData.margin ? collider.userData.margin : new Vector3(0, 0, 0);
-                collider.userData.box = new Box3().setFromObject(collider);
-                collider.userData.box.min.set(collider.userData.box.min.x - margin.left, collider.userData.box.min.y - margin.bottom, collider.userData.box.min.z - margin.front);
-                collider.userData.box.max.set(collider.userData.box.max.x + margin.right, collider.userData.box.max.y + margin.top, collider.userData.box.max.z + margin.back);
+
         }
 
         getClosestElement(selectedObject) {
