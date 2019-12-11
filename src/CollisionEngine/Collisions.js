@@ -15,15 +15,15 @@ class Collisions {
 
         addCollider(collider) {
                 if (!collider.userData.transformData) {
-                        collider.userData.transformData = new TransformData();
+                        collider.userData.transformData = new TransformData(collider);
                 }
                 if (collider instanceof Group) {
 
                         collider.traverse((mesh) => {
                                 if ((mesh instanceof Mesh)) {
                                         if (!mesh.userData.transformData) {
-                                                mesh.userData.transformData = new TransformData();
-                                                mesh.userData.transformData.setAsChild();
+                                                mesh.userData.transformData = new TransformData(collider);
+                                                mesh.userData.transformData.setAsGroupChild();
                                         }
                                         this.meshColliders.push(mesh);
                                         collider.userData.transformData.colliders.push(mesh);
@@ -38,8 +38,9 @@ class Collisions {
 
         checkCollisions(selectedObject) {
                 updateBox(selectedObject);
-                for (let i = 0; i < this.meshColliders.length; i++) {
-                        let collisionObj = this.meshColliders[i];
+                let meshCollidersAtSameLevel = this._getCollidersFromParent(selectedObject);
+                for (let i = 0; i < meshCollidersAtSameLevel.length; i++) {
+                        let collisionObj = meshCollidersAtSameLevel[i];
                         if (isSameObject(selectedObject, collisionObj)) {
                                 continue;
                         }
@@ -78,10 +79,21 @@ class Collisions {
                                         closest.distances[2] = distances.distanceZ;
                                 }
                         }
-                        collider.material.color.set(0x00ff00);
+
                 });
-                closest.element.material.color.set(0xff0000);
+                // closest.element.material.color.set(0xff0000);
                 return closest;
+        }
+
+        _getCollidersFromParent(element) {
+                parent = element.userData.transformData.getParent();
+                console.log(`parent: ${parent.name}`);
+                if (!parent) {
+                        element.userData.transformData.setParent(element.parent);
+                }
+                return this.meshColliders.filter((element)=>{
+                        return element.userData.transformData.getParent().uuid === parent.uuid;
+                } );
         }
 
 }
