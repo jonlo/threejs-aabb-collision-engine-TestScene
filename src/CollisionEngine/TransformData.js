@@ -34,6 +34,7 @@ class TransformData {
         this.children = [];
         this.ischild = false;
         this.element = element;
+        this.selectable = true;
     }
 
     setAsGroupChild() {
@@ -70,7 +71,7 @@ class TransformData {
     setBox(collider) {
         this.box = new Box3().setFromObject(collider);
     }
-
+    
     getRestrictions() {
         return this.restrictions;
     }

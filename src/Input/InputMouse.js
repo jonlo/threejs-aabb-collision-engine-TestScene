@@ -63,7 +63,7 @@ class InputMouse {
 
     _raycastHits(camera, mousePos, colliders) {
         this.raycaster.setFromCamera(mousePos, camera);
-        let intersects = this.raycaster.intersectObjects(colliders);
+        let intersects = this.raycaster.intersectObjects(colliders.filter(element=>element.userData.transformData.selectable));
         return intersects;
     }
 

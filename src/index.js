@@ -77,7 +77,9 @@ function addElements() {
     scene.add(cube1);
     inputMouse.transformer.collisionEngine.addCollider(cube1);
 
-    let parentCube2 = createCube(5, 5, 5, Math.random() *0x0000ff);
+    var geometry = new THREE.BoxGeometry(25, 25, 25);
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000 , transparent: true, opacity: 0.2});
+    var parentCube2 = new THREE.Mesh(geometry, material);
     parentCube2.position.set((2 * 5.01), (2 * 5.01 + 2.5), 0);
     parentCube2.name = `cube_2`;
     scene.add(parentCube2);
@@ -85,12 +87,8 @@ function addElements() {
     
     parentCube2.userData.transformData.addChild(cube);
     parentCube2.userData.transformData.addChild(cube1);
-    
-    let parentCube = createCube(5, 5, 5, 0xff0000);
-    parentCube.position.set((3 * 5.01), (3 * 5.01 + 2.5), 0);
-    parentCube.name = `cube_2`;
-    scene.add(parentCube);
-    inputMouse.transformer.collisionEngine.addCollider(parentCube);
+    parentCube2.userData.transformData.selectable = false;
+   
 }
 
 function createCube(width, height, depth, color) {
