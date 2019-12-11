@@ -26,10 +26,16 @@ class InputMouse {
         var mousePos = new Vector2((e.clientX / window.innerWidth) * 2 - 1, - (e.clientY / window.innerHeight) * 2 + 1);
         var intersects = this._raycastHits(this.camera, mousePos, this.transformer.collisionEngine.meshColliders);
         if (intersects.length > 0) {
+
+
             if (!(intersects[0].object.parent instanceof Scene)) {
                 this.selectedCube = intersects[0].object.parent;
             } else {
                 this.selectedCube = intersects[0].object;
+            }
+            let firstChild = intersects.find(intersect => intersect.object.userData.transformData.isChild());
+            if (firstChild) {
+                this.selectedCube = firstChild.object;
             }
             this.controls.enabled = false;
         }
@@ -63,7 +69,7 @@ class InputMouse {
 
     _raycastHits(camera, mousePos, colliders) {
         this.raycaster.setFromCamera(mousePos, camera);
-        let intersects = this.raycaster.intersectObjects(colliders.filter(element=>element.userData.transformData.selectable));
+        let intersects = this.raycaster.intersectObjects(colliders.filter(element => element.userData.transformData.selectable));
         return intersects;
     }
 

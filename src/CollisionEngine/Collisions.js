@@ -1,5 +1,5 @@
 import { Group, Mesh } from 'three';
-import { getClosestDistanceBetweenObjects } from './Snap'
+import { getClosestDistanceBetweenObjects, checkIfObjectInsideObjectBounds } from './aabbOperations'
 import { isSameObject, tryToUpdateObject, updateBox } from './CollisionUpdates'
 import { TransformData } from './TransformData';
 
@@ -37,6 +37,9 @@ class Collisions {
         }
 
         checkCollisions(selectedObject) {
+                if (this._checkCollisionWithParentBounds(selectedObject)) {
+                        return true;
+                }
                 updateBox(selectedObject);
                 let meshCollidersAtSameLevel = this._getCollidersFromParent(selectedObject);
                 for (let i = 0; i < meshCollidersAtSameLevel.length; i++) {
@@ -87,13 +90,26 @@ class Collisions {
 
         _getCollidersFromParent(element) {
                 parent = element.userData.transformData.getParent();
-                console.log(`parent: ${parent.name}`);
                 if (!parent) {
                         element.userData.transformData.setParent(element.parent);
                 }
-                return this.meshColliders.filter((element)=>{
+                return this.meshColliders.filter((element) => {
                         return element.userData.transformData.getParent().uuid === parent.uuid;
-                } );
+                });
+        }
+
+        _checkCollisionWithParentBounds(selectedObject) {
+                let parent = null;
+                try {
+                        parent = selectedObject.userData.transformData.getParent();
+                } catch (error) {
+                        return false;
+                }
+                if (parent.userData.transformData) {
+                        let objectInside = checkIfObjectInsideObjectBounds(selectedObject, parent);
+                        return !objectInside;
+                }
+                return false;
         }
 
 }
