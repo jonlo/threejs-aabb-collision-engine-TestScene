@@ -56,6 +56,9 @@ class TransformData {
         child.userData.transformData.parent = child.parent;
     }
 
+    getChildren() {
+        return this.children;
+    }
 
     getParent() {
         if (!this.parent) {
@@ -68,7 +71,7 @@ class TransformData {
         this.box = new Box3().setFromObject(collider);
     }
 
-    getRestrictions(){
+    getRestrictions() {
         return this.restrictions;
     }
 

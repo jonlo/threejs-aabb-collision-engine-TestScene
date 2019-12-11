@@ -30,12 +30,14 @@ class Transformer {
         object.updateMatrixWorld();
         if (!snapped) {
             object.position.setComponent(axis, object.position.getComponent(axis) - deltaMove);
+            this._translateChildren(object, axis, deltaMove, -1);
             object.updateMatrixWorld();
             this.realPosition.setComponent(axis, this.realPosition.getComponent(axis) - deltaMove);
         }
         if (this.collisionsEnabled) {
             if (this.collisionEngine.checkCollisions(object)) {
                 object.position.setComponent(axis, object.position.getComponent(axis) + deltaMove);
+                this._translateChildren(object, axis, deltaMove, 1);
                 this.collisionEngine.updateCollisionBox(object);
                 if (this.trackAfterCollision) {
                     this._tryToRelocateObject(object, axis);
@@ -45,6 +47,13 @@ class Transformer {
             }
         }
         restrict(object, axis);
+    }
+
+    _translateChildren(object, axis, deltaMove, dir) {
+        object.userData.transformData.getChildren().forEach(child => {
+            child.position.setComponent(axis, child.position.getComponent(axis) + deltaMove * dir);
+            this.collisionEngine.updateCollisionBox(child);
+        });
     }
 
     reset() {
