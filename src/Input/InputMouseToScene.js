@@ -40,11 +40,11 @@ class InputMouseToScene {
         let mouse = new Vector2((e.clientX / window.innerWidth) * 2 - 1, - (e.clientY / window.innerHeight) * 2 + 1);
         let mousePos = this._getMousePositionInScene(mouse);
         this.listeners.forEach((listener) => {
-            try {
+            // try {
                 listener.mouseMove(mousePos, mouse)
-            } catch (error) {
-                this._throwError('mouseMove');
-            }
+            // } catch (error) {
+            //     this._throwError('mouseMove');
+            // }
         });
     }
 

@@ -1,7 +1,7 @@
 const SNAP_SCAPE = 0.3;
 const SNAP_MARGIN = 0.005;
 
-export function shouldSnap(object, closest, movingAxis, deltaMove, snapDistance) {
+export function snap(object, closest, movingAxis, deltaMove, snapDistance) {
     let distance = closest.distances.reduce(function (prev, curr) {
         return (Math.abs(curr - 0) < Math.abs(prev - 0 && curr > 0) ? curr : prev);
     });

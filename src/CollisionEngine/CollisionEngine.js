@@ -3,7 +3,7 @@
 import { Vector3 } from 'three';
 import { Collisions } from './Collisions/Collisions'
 import { restrict } from './Transforms/Restrictions'
-import { shouldSnap } from './Transforms/Snap'
+import { snap } from './Transforms/Snap'
 import { TransformData } from './Transforms/TransformData.js';
 
 class CollisionEngine {
@@ -23,7 +23,7 @@ class CollisionEngine {
         }
         let snapped = false;
         if (this.snapDistance > 0) {
-            snapped = shouldSnap(object, this.collisions.getClosestElement(object), axis, deltaMove, this.snapDistance) === axis;
+            snapped = snap(object, this.collisions.getClosestElement(object), axis, deltaMove, this.snapDistance) === axis;
         }
 
         object.updateMatrixWorld();

@@ -76,16 +76,16 @@ class Mediator {
     }
 
     addElements() {
-        let cubeA = this.createCube(10, 5, 5, 0x00ffff);
-        let cubeB = this.createCube(5, 5, 5, 0x00ffff);
-        cubeB.position.set(-2.5, 5, 0);
-        var group = new Group();
-        group.add(cubeA);
-        group.add(cubeB);
-        group.name = "tetris";
-        group.position.set(-20, 2.5, 0);
-        this.collisionEngine.addCollider(group);
-        this.scene.add(group);
+        // let cubeA = this.createCube(10, 5, 5, 0x00ffff);
+        // let cubeB = this.createCube(5, 5, 5, 0x00ffff);
+        // cubeB.position.set(-2.5, 5, 0);
+        // var group = new Group();
+        // group.add(cubeA);
+        // group.add(cubeB);
+        // group.name = "tetris";
+        // group.position.set(-20, 2.5, 0);
+        // this.collisionEngine.addCollider(group);
+        // this.scene.add(group);
         // for (let indexX = 0; indexX < 50; indexX++) {
         //     for (let indexY = 0; indexY < 50; indexY++) {//Math.random() * 
         //         let cube = this.createCube(5, 5, 5, 0x00ff00);
@@ -97,7 +97,7 @@ class Mediator {
         // }
 
 
-        let cube = this.createCube(5, 5, 5, Math.random() * 0xffffff);
+        let cube = this.createCube(15, 5, 5, Math.random() * 0xffffff);
         cube.position.set((0 * 5.01), (0 * 5.01 + 2.5), 0);
         cube.name = `cube_0`;
         this.scene.add(cube);
@@ -109,22 +109,22 @@ class Mediator {
         this.scene.add(cube1);
         this.collisionEngine.addCollider(cube1);
 
-        var geometry = new BoxGeometry(25, 25, 25);
-        var material = new MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.2 });
-        var parentCube2 = new Mesh(geometry, material);
-        parentCube2.position.set(0, 12.5, 0);
-        parentCube2.name = `parent`;
-        this.scene.add(parentCube2);
-        this.collisionEngine.addCollider(parentCube2);
+        // var geometry = new BoxGeometry(25, 25, 25);
+        // var material = new MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.2 });
+        // var parentCube2 = new Mesh(geometry, material);
+        // parentCube2.position.set(0, 12.5, 0);
+        // parentCube2.name = `parent`;
+        // this.scene.add(parentCube2);
+        // this.collisionEngine.addCollider(parentCube2);
 
-        parentCube2.userData.transformData.addChild(cube);
-        parentCube2.userData.transformData.addChild(cube1);
+        // parentCube2.userData.transformData.addChild(cube);
+        // parentCube2.userData.transformData.addChild(cube1);
         // parentCube2.userData.transformData.selectable = false;
 
         var size = 100;
         var divisions = 100;
         var gridHelper = new GridHelper(size, divisions);
-        this.collisionEngine.addCollider(gridHelper);
+        //this.collisionEngine.addCollider(gridHelper);
         this.scene.add(gridHelper);
 
     }

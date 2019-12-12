@@ -1,36 +1,43 @@
 import { Group, Vector3 } from 'three';
 
 export function getClosestDistanceBetweenObjects(selectedObject, collider) {
-    let distancesX = [];
-    let distancesY = [];
-    let distancesZ = [];
+    let distances = [[], [], []];
     if (selectedObject instanceof Group) {
         selectedObject.updateMatrixWorld();
         selectedObject.userData.transformData.colliders.forEach((mesh) => {
-            setDistancesBetweenObjects(mesh, collider, distancesX, distancesY, distancesZ);
+            setDistancesBetweenObjects(mesh, collider, distances);
         });
     } else {
-        setDistancesBetweenObjects(selectedObject, collider, distancesX, distancesY, distancesZ);
+        setDistancesBetweenObjects(selectedObject, collider, distances);
     }
-    let distanceX = getClosestDistance(distancesX);
-    let distanceY = getClosestDistance(distancesY);
-    let distanceZ = getClosestDistance(distancesZ);
-    return { distanceX, distanceY, distanceZ };
+    return {
+        distanceX: getClosestDistance(distances[0]),
+        distanceY: getClosestDistance(distances[1]),
+        distanceZ: getClosestDistance(distances[2])
+    };
 }
 
-function setDistancesBetweenObjects(selectedElement, collider, distancesX, distancesY, distancesZ) {
+function setDistancesBetweenObjects(selectedElement, collider, distances) {
     let selectedWorldPos = new Vector3();
     selectedWorldPos.setFromMatrixPosition(selectedElement.matrixWorld);
     let colliderWorldPos = new Vector3();
     colliderWorldPos.setFromMatrixPosition(collider.matrixWorld);
-    let colliderBox = collider.userData.transformData.box;
-    let selectedBox = selectedElement.userData.transformData.box;
-    distancesX.push(Math.abs((selectedWorldPos.x - colliderWorldPos.x) - (selectedBox.max.x - selectedBox.min.x) / 2
-        + (colliderBox.max.x - colliderBox.min.x) / 2) - (selectedBox.max.x - selectedBox.min.x));
-    distancesY.push(Math.abs((selectedWorldPos.y - colliderWorldPos.y) - (selectedBox.max.y - selectedBox.min.y) / 2
-        + (colliderBox.max.y - colliderBox.min.y) / 2) - (selectedBox.max.y - selectedBox.min.y));
-    distancesZ.push(Math.abs((selectedWorldPos.z - colliderWorldPos.z) - (selectedBox.max.z - selectedBox.min.z) / 2
-        + (colliderBox.max.z - colliderBox.min.z) / 2) - (selectedBox.max.z - selectedBox.min.z));
+    for (let axis = 0; axis < 3; axis++) {
+        let colliderWidth = (collider.userData.transformData.box.max.getComponent(axis) - collider.userData.transformData.box.min.getComponent(axis)) / 2;
+        let selectedWidth = (selectedElement.userData.transformData.box.max.getComponent(axis) - selectedElement.userData.transformData.box.min.getComponent(axis)) / 2;
+        let selectedMaxPoint = selectedWorldPos.getComponent(axis) + selectedWidth;
+        let colliderMinPoint = colliderWorldPos.getComponent(axis) - colliderWidth;
+        let selectedMinPoint = selectedWorldPos.getComponent(axis) - selectedWidth;
+        let colliderMaxPoint = colliderWorldPos.getComponent(axis) + colliderWidth;
+        if (selectedMaxPoint < colliderMaxPoint) {
+            distances[axis].push(colliderMinPoint - selectedMaxPoint);
+        } else {
+            distances[axis].push(selectedMinPoint - colliderMaxPoint);
+        }
+    }
+    console.log(`dx: ${distances[0]}`);
+    console.log(`dy: ${distances[1]}`);
+    console.log(`dz: ${distances[2]}`);
 }
 
 function getClosestDistance(distances) {
