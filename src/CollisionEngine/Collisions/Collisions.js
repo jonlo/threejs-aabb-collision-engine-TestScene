@@ -29,10 +29,10 @@ class Collisions {
                                         collider.userData.transformData.colliders.push(mesh);
                                 }
                         });
-                } else if (collider instanceof Mesh) {
+                } else if (collider.geometry) {
                         this.meshColliders.push(collider);
                 } else {
-                        throw "Only mesh or group colliders should be added";
+                        throw "Only groups or elements with geometry should be added to the collision engine";
                 }
         }
 

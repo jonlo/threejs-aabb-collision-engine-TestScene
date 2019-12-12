@@ -40,10 +40,7 @@ class Mediator {
         };
         this.collisionEngine = new CollisionEngine(collisionEngineParams);
         this.selection = new Selection(this.camera)
-        var size = 100;
-        var divisions = 100;
-        var gridHelper = new GridHelper(size, divisions);
-        this.scene.add(gridHelper);
+        
         this.addElements();
     }
 
@@ -123,6 +120,12 @@ class Mediator {
         parentCube2.userData.transformData.addChild(cube);
         parentCube2.userData.transformData.addChild(cube1);
         // parentCube2.userData.transformData.selectable = false;
+
+        var size = 100;
+        var divisions = 100;
+        var gridHelper = new GridHelper(size, divisions);
+        this.collisionEngine.addCollider(gridHelper);
+        this.scene.add(gridHelper);
 
     }
 
