@@ -97,7 +97,7 @@ class Mediator {
         // }
 
 
-        let cube = this.createCube(15, 5, 5, Math.random() * 0xffffff);
+        let cube = this.createCube(5, 15, 5, Math.random() * 0xffffff);
         cube.position.set((0 * 5.01), (0 * 5.01 + 2.5), 0);
         cube.name = `cube_0`;
         this.scene.add(cube);
