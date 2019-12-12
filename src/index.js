@@ -54,15 +54,41 @@ function addElements() {
     group.position.set(-10, 2.5, 0);
     inputMouse.transformer.collisionEngine.addCollider(group);
     scene.add(group);
-    for (let indexX = 0; indexX < 50; indexX++) {
-        for (let indexY = 0; indexY < 50; indexY++) {//Math.random() * 
-            let cube = createCube(5, 5, 5, 0x00ff00);
-            cube.position.set((indexX * 5.01), (indexY * 5.01 + 2.5), 0);
-            cube.name = `cube_${indexX}_${indexY}`;
-            scene.add(cube);
-            inputMouse.transformer.collisionEngine.addCollider(cube);
-        }
-    }
+    // for (let indexX = 0; indexX < 5; indexX++) {
+    //     for (let indexY = 0; indexY < 5; indexY++) {//Math.random() * 
+    //         let cube = createCube(5, 5, 5, 0x00ff00);
+    //         cube.position.set((indexX * 5.01), (indexY * 5.01 + 2.5), 0);
+    //         cube.name = `cube_${indexX}_${indexY}`;
+    //         scene.add(cube);
+    //         inputMouse.transformer.collisionEngine.addCollider(cube);
+    //     }
+    // }
+
+
+    let cube = createCube(5, 5, 5, Math.random() * 0xffffff);
+    cube.position.set((0 * 5.01), (0 * 5.01 + 2.5), 0);
+    cube.name = `cube_0`;
+    scene.add(cube);
+    inputMouse.transformer.collisionEngine.addCollider(cube);
+
+    let cube1 = createCube(5, 5, 5, Math.random() * 0xffffff);
+    cube1.position.set((1 * 5.01), (1 * 5.01 + 2.5), 0);
+    cube1.name = `cube_1`;
+    scene.add(cube1);
+    inputMouse.transformer.collisionEngine.addCollider(cube1);
+
+    var geometry = new THREE.BoxGeometry(25, 25, 25);
+    var material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.2 });
+    var parentCube2 = new THREE.Mesh(geometry, material);
+    parentCube2.position.set(0, 0, 0);
+    parentCube2.name = `parent`;
+    scene.add(parentCube2);
+    inputMouse.transformer.collisionEngine.addCollider(parentCube2);
+
+    parentCube2.userData.transformData.addChild(cube);
+    parentCube2.userData.transformData.addChild(cube1);
+   // parentCube2.userData.transformData.selectable = false;
+
 }
 
 function createCube(width, height, depth, color) {
