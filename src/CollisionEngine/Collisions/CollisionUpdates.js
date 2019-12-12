@@ -1,4 +1,4 @@
-import { Group, Box3 } from 'three';
+import { Group } from 'three';
 
 export function isSameObject(parent, son) {
     if (parent === son)
@@ -17,7 +17,7 @@ export function isSameObject(parent, son) {
 }
 
 export function updateCollider(collider) {
-    let margin = collider.userData.isChild ? _getMarginForObject(collider.parent) : _getMarginForObject(collider);
+    let margin = collider.userData.transformData.isGroupChild ? collider.parent.userData.transformData.margin : collider.userData.transformData.margin;
     collider.userData.transformData.setBox(collider);
     collider.userData.transformData.box.min.set(collider.userData.transformData.box.min.x - margin.left, collider.userData.transformData.box.min.y - margin.bottom, collider.userData.transformData.box.min.z - margin.front);
     collider.userData.transformData.box.max.set(collider.userData.transformData.box.max.x + margin.right, collider.userData.transformData.box.max.y + margin.top, collider.userData.transformData.box.max.z + margin.back);
@@ -37,15 +37,4 @@ export function updateBox(collider) {
     } else {
         updateCollider(collider);
     }
-}
-
-function _getMarginForObject(object) {
-    return object.userData.transformData.margin ? object.userData.transformData.margin : {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        front: 0,
-        back: 0
-    };
 }

@@ -1,7 +1,7 @@
 import { Group, Mesh } from 'three';
-import { getClosestDistanceBetweenObjects, checkIfObjectInsideObjectBounds } from './aabbOperations'
+import { getClosestDistanceBetweenObjects, checkIfObjectInsideObjectBounds } from '../Aabb/aabbOperations'
 import { isSameObject, tryToUpdateObject, updateBox } from './CollisionUpdates'
-import { TransformData } from './TransformData';
+import { TransformData } from '../Transforms/TransformData';
 
 class Collisions {
 
@@ -82,7 +82,6 @@ class Collisions {
                                         closest.distances[2] = distances.distanceZ;
                                 }
                         }
-
                 });
                 // closest.element.material.color.set(0xff0000);
                 return closest;

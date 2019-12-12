@@ -29,10 +29,10 @@ class TransformData {
             }
         };
         this.padding = {
-            left: 2,
-            right: 2,
-            top: 2,
-            bottom: 2,
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
             front: 0,
             back: 0
         };
@@ -49,7 +49,7 @@ class TransformData {
         this.colliders = null;
         this.margin = null;
         this.restrictions = null;
-        this.ischild = true;
+        this.isGroupChild = true;
     }
 
     addChild(child) {

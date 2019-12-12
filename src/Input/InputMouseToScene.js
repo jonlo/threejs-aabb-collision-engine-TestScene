@@ -6,7 +6,6 @@ class InputMouseToScene {
 
     constructor(container, camera, listeners) {
         this.listeners = listeners ? listeners : [];
-
         this.camera = camera;
         container.addEventListener('mousedown', (e) => { this._mouseDown(e) });
         container.addEventListener('mousemove', (e) => { this._mouseMove(e) });
@@ -16,21 +15,37 @@ class InputMouseToScene {
     _mouseDown(e) {
         let mouse = new Vector2((e.clientX / window.innerWidth) * 2 - 1, - (e.clientY / window.innerHeight) * 2 + 1);
         let mousePos = this._getMousePositionInScene(mouse);
-        this.listeners.forEach(l => l.mouseDown(mousePos,mouse));
-
-        console.log(`mousex: ${e.clientX}  mousey:${e.clientY} sceneX${mousePos.x} sceneY${mousePos.x} `);
+        this.listeners.forEach((listener) => {
+            try {
+                listener.mouseDown(mousePos, mouse)
+            } catch (error) {
+                this._throwError('mouseDown');
+            }
+        });
     }
 
     _mouseUp(e) {
         let mouse = new Vector2((e.clientX / window.innerWidth) * 2 - 1, - (e.clientY / window.innerHeight) * 2 + 1);
         let mousePos = this._getMousePositionInScene(mouse);
-        this.listeners.forEach(l => l.mouseUp(mousePos,mouse));
+        this.listeners.forEach((listener) => {
+            try {
+                listener.mouseUp(mousePos, mouse)
+            } catch (error) {
+                this._throwError('mouseUp');
+            }
+        });
     }
 
     _mouseMove(e) {
         let mouse = new Vector2((e.clientX / window.innerWidth) * 2 - 1, - (e.clientY / window.innerHeight) * 2 + 1);
         let mousePos = this._getMousePositionInScene(mouse);
-        this.listeners.forEach(l => l.mouseMove(mousePos,mouse));
+        this.listeners.forEach((listener) => {
+            try {
+                listener.mouseMove(mousePos, mouse)
+            } catch (error) {
+                this._throwError('mouseMove');
+            }
+        });
     }
 
     _getMousePositionInScene(mousePos) {
@@ -40,6 +55,10 @@ class InputMouseToScene {
         let distance = - this.camera.position.z / dir.z;
         let pos = this.camera.position.clone().add(dir.multiplyScalar(distance));
         return pos;
+    }
+
+    _throwError(methodName) {
+        console.error(`InputMouseToScene Listener should implement ${methodName} function`);
     }
 
 }

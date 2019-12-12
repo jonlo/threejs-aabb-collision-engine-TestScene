@@ -52,6 +52,3 @@ export function checkIfObjectInsideObjectBounds(object, parent) {
     }
     return true;
 }
-
-
-

@@ -12,5 +12,3 @@ export function restrict(object, axis) {
         object.scale.setComponent(axis, restrictions.scale[AXES[axis]]);
     }
 }
-
-
