@@ -28,7 +28,14 @@ class TransformData {
                 z: NaN
             }
         };
-        this.padding = null;
+        this.padding = {
+            left: 2,
+            right: 2,
+            top: 2,
+            bottom: 2,
+            front: 0,
+            back: 0
+        };
         this.box = null;
         this.colliders = [];
         this.children = [];
@@ -73,15 +80,15 @@ class TransformData {
         this.box = new Box3().setFromObject(collider);
     }
 
-    getBounds(){
+    getBounds() {
         return this.box;
     }
-    
+
     getRestrictions() {
         return this.restrictions;
     }
 
-    isChild(){
+    isChild() {
         return this.parent !== null;
     }
 
