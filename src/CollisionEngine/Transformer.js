@@ -1,6 +1,6 @@
 'strict mode'
 
-import { Vector3, Group } from 'three';
+import { Vector3 } from 'three';
 import { Collisions } from './Collisions.js'
 import { restrict } from './Restrictions'
 import { snap } from './Snap'
@@ -11,7 +11,6 @@ class Transformer {
     constructor(params) {
         this.trackAfterCollision = params.trackAfterCollision === undefined ? true : params.trackAfterCollision;
         this.snapDistance = params.snapDistance === undefined ? 0 : params.snapDistance;
-        this.camera = params.camera;
         this.collisionEngine = new Collisions();
         this.realPosition = null;
         this.collisionsEnabled = true;
