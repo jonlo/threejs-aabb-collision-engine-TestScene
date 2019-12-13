@@ -23,7 +23,7 @@ class CollisionEngine {
 		}
 		let snapped = false;
 		if (this.snapDistance > 0) {
-			snapped = snap(object, this.collisions.getClosestElement(object), axis, deltaMove, this.snapDistance) === axis;
+			snapped = snap(object, this.collisions.getClosestElement(object), axis, deltaMove, this.snapDistance,this._onSnap) === axis;
 		}
 
 		object.updateMatrixWorld();
@@ -58,6 +58,10 @@ class CollisionEngine {
 
 	reset() {
 		this.realPosition = null;
+	}
+
+	_onSnap(object, axis, value) {
+		object.position.setComponent(axis, value);
 	}
 
 	_translateChildren(object, axis, deltaMove, dir) {
