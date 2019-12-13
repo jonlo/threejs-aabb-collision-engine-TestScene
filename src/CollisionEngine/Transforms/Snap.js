@@ -4,8 +4,10 @@ const SNAP_SCAPE = 0.3;
 const SNAP_MARGIN = 0.005;
 const SNAP_BOUNDS = Object.freeze({ 'none': 0, 'snapXY': 1, 'snapXZ': 2, 'snapZY': 3 });
 
+const lastDistance = [0, 0, 0];
+const lastScapeDistance = [0, 0, 0];
 
-export function snap(selectedObject, closestObject, movingAxis, deltaMove, snapDistance, onSnapCallback, snapToBound = SNAP_BOUNDS.snapXZ) {
+export function snap(selectedObject, closestObject, movingAxis, deltaMove, snapDistance, onSnapCallback, snapToBound = SNAP_BOUNDS.snapXY) {
 	if (closestObject.distances.length === 0) {
 		return;
 	}
@@ -15,15 +17,22 @@ export function snap(selectedObject, closestObject, movingAxis, deltaMove, snapD
 	let axis = closestObject.distances.indexOf(distance);
 	let dir = deltaMove < 0 ? -1 : 1;
 	let correctDistances = closestObject.distances.filter(d => d < snapDistance).length;
-	if (correctDistances > 2 && distance >= SNAP_SCAPE) {
-		if (movingAxis === axis) {
-			onSnapCallback(selectedObject, axis, selectedObject.position.getComponent(axis) - (distance - SNAP_MARGIN) * dir);
-			if (snapToBound !== SNAP_BOUNDS.none) {
-				snapToBounds(selectedObject, closestObject, getAxisForSnapBound(axis, snapToBound), onSnapCallback);
+	if (correctDistances > 2) {
+		if (distance < lastDistance[movingAxis] && distance > SNAP_SCAPE) {
+			if (movingAxis === axis) {
+				onSnapCallback(selectedObject, axis, selectedObject.position.getComponent(axis) - (distance - SNAP_MARGIN) * dir);
+				if (snapToBound !== SNAP_BOUNDS.none) {
+					snapToBounds(selectedObject, closestObject, getAxisForSnapBound(axis, snapToBound), onSnapCallback);
+				}
+				lastDistance[movingAxis] = 0;
+				return movingAxis;
 			}
-			return movingAxis;
+		} else {
+			lastDistance[movingAxis] = Math.abs(distance);
 		}
+
 	}
+
 }
 
 function snapToBounds(selectedObject, closestObject, axis, onSnapCallback) {

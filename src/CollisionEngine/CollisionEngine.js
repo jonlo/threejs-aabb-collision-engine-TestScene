@@ -1,5 +1,3 @@
-'strict mode';
-
 import { Vector3 } from 'three';
 import { Collisions } from './Collisions/Collisions';
 import { restrict } from './Transforms/Restrictions';
@@ -14,6 +12,8 @@ class CollisionEngine {
 		this.collisions = new Collisions();
 		this.realPosition = null;
 		this.collisionsEnabled = true;
+		this.resetOnSnap = params.resetOnSnap === undefined ? true : params.resetOnSnap;
+		this.resetCallback = params.resetCallback === undefined ? null : params.resetCallback;
 	}
 
 	translate(object, axis, deltaMove) {
@@ -23,9 +23,8 @@ class CollisionEngine {
 		}
 		let snapped = false;
 		if (this.snapDistance > 0) {
-			snapped = snap(object, this.collisions.getClosestElement(object), axis, deltaMove, this.snapDistance,this._onSnap) === axis;
+			snapped = snap(object, this.collisions.getClosestElement(object), axis, deltaMove, this.snapDistance, (object, axis, value) => { this._onSnap(object, axis, value); }) === axis;
 		}
-
 		object.updateMatrixWorld();
 		if (!snapped) {
 			object.position.setComponent(axis, object.position.getComponent(axis) - deltaMove);
@@ -60,8 +59,20 @@ class CollisionEngine {
 		this.realPosition = null;
 	}
 
+	_checkTransformData(object) {
+		if (!object.userData.transformData) {
+			object.userData.transformData = new TransformData();
+		}
+	}
+
 	_onSnap(object, axis, value) {
+		if (!this.realPosition) { return; }
 		object.position.setComponent(axis, value);
+		let deltaMove = this.realPosition.getComponent(axis) - object.position.getComponent(axis);
+		this._translateChildren(object, axis, deltaMove, -1);
+		if (this.resetOnSnap) {
+			this.resetCallback();
+		}
 	}
 
 	_translateChildren(object, axis, deltaMove, dir) {
@@ -69,11 +80,6 @@ class CollisionEngine {
 			child.position.setComponent(axis, child.position.getComponent(axis) + deltaMove * dir);
 			this.collisions.updateCollisionBox(child);
 		});
-	}
-	_checkTransformData(object) {
-		if (!object.userData.transformData) {
-			object.userData.transformData = new TransformData();
-		}
 	}
 
 	_tryToRelocateObject(object, axis) {
