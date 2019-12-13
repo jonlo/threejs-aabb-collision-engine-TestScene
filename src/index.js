@@ -72,16 +72,16 @@ class Mediator {
 	}
 
 	addElements() {
-		// let cubeA = this.createCube(10, 5, 5, 0x00ffff);
-		// let cubeB = this.createCube(5, 5, 5, 0x00ffff);
-		// cubeB.position.set(-2.5, 5, 0);
-		// var group = new Group();
-		// group.add(cubeA);
-		// group.add(cubeB);
-		// group.name = 'tetris';
-		// group.position.set(-20, 2.5, 0);
-		// this.collisionEngine.addCollider(group);
-		// this.scene.add(group);
+		let cubeA = this.createCube(10, 5, 5, 0x00ffff);
+		let cubeB = this.createCube(5, 5, 5, 0x00ffff);
+		cubeB.position.set(-2.5, 5, 0);
+		var group = new Group();
+		group.add(cubeA);
+		group.add(cubeB);
+		group.name = 'tetris';
+		group.position.set(-20, 2.5, 0);
+		this.collisionEngine.addCollider(group);
+		this.scene.add(group);
 		// for (let indexX = 0; indexX < 50; indexX++) {
 		// 	for (let indexY = 0; indexY < 50; indexY++) {//Math.random() * 
 		// 		let cube = this.createCube(5, 5, 5, 0x00ff00);

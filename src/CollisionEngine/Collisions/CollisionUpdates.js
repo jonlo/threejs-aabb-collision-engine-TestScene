@@ -24,7 +24,7 @@ export function updateCollider(collider) {
 }
 
 export function tryToUpdateObject(collisionObj) {
-	if (!collisionObj.userData.transformData || !collisionObj.userData.transformData.box) {
+	if (collisionObj && (!collisionObj.userData.transformData || !collisionObj.userData.transformData.box)) {
 		updateBox(collisionObj);
 	}
 }

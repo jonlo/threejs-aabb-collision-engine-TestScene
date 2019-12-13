@@ -63,6 +63,9 @@ class Collisions {
 	}
 
 	getClosestElement(selectedObject) {
+		if (!selectedObject) {
+			return;
+		}
 		tryToUpdateObject(selectedObject);
 		let closest = {
 			distances: [],
@@ -88,6 +91,9 @@ class Collisions {
 	}
 
 	_getCollidersFromParent(element) {
+		if (!element) {
+			return;
+		}
 		let parent = element.userData.transformData.getParent();
 		if (!parent) {
 			element.userData.transformData.setParent(element.parent);

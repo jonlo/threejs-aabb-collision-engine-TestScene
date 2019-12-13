@@ -47,13 +47,32 @@ function setDistancesBetweenObjects(selectedElement, collider, distances) {
 }
 
 export function getBoundsForElementInAxis(element, axis) {
-	let elementWorldPos = new Vector3();
-	elementWorldPos.setFromMatrixPosition(element.matrixWorld);
-	let elementWidth = (element.userData.transformData.box.max.getComponent(axis) - element.userData.transformData.box.min.getComponent(axis)) / 2;
-	let max = elementWorldPos.getComponent(axis) + elementWidth;
-	let min = elementWorldPos.getComponent(axis) - elementWidth;
-	return { min, max };
+
+	if (element instanceof Group) {
+		element.updateMatrixWorld();
+		let min = NaN;
+		let max = NaN;
+		element.userData.transformData.colliders.forEach((mesh) => {
+			let meshWorldPosh = new Vector3();
+			meshWorldPosh.setFromMatrixPosition(mesh.matrixWorld);
+			let elementWidth = (mesh.userData.transformData.box.max.getComponent(axis) - mesh.userData.transformData.box.min.getComponent(axis)) / 2;
+			let currentMax = meshWorldPosh.getComponent(axis) + elementWidth;
+			let currentMin = meshWorldPosh.getComponent(axis) - elementWidth;
+			max = currentMax < max || !max ? currentMax : max;
+			min = currentMin < min || !min ? currentMin : min;
+		});
+		return { min, max };
+	} else {
+		let elementWorldPos = new Vector3();
+		elementWorldPos.setFromMatrixPosition(element.matrixWorld);
+		let elementWidth = (element.userData.transformData.box.max.getComponent(axis) - element.userData.transformData.box.min.getComponent(axis)) / 2;
+		let max = elementWorldPos.getComponent(axis) + elementWidth;
+		let min = elementWorldPos.getComponent(axis) - elementWidth;
+		return { min, max };
+	}
 }
+
+
 
 function getClosestDistance(distances) {
 	return distances.reduce((prev, curr) => {

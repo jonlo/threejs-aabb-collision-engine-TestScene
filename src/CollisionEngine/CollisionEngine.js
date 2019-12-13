@@ -17,6 +17,9 @@ class CollisionEngine {
 	}
 
 	translate(object, axis, deltaMove) {
+		if (!object) {
+			return;
+		}
 		this._checkTransformData(object);
 		if (!this.realPosition) {
 			this.realPosition = object.position.clone();
@@ -60,6 +63,9 @@ class CollisionEngine {
 	}
 
 	_checkTransformData(object) {
+		if (!object) {
+			return;
+		}
 		if (!object.userData.transformData) {
 			object.userData.transformData = new TransformData();
 		}

@@ -5,10 +5,9 @@ const SNAP_MARGIN = 0.005;
 const SNAP_BOUNDS = Object.freeze({ 'none': 0, 'snapXY': 1, 'snapXZ': 2, 'snapZY': 3 });
 
 const lastDistance = [0, 0, 0];
-const lastScapeDistance = [0, 0, 0];
 
 export function snap(selectedObject, closestObject, movingAxis, deltaMove, snapDistance, onSnapCallback, snapToBound = SNAP_BOUNDS.snapXY) {
-	if (closestObject.distances.length === 0) {
+	if (!closestObject || closestObject.distances.length === 0) {
 		return;
 	}
 	let distance = closestObject.distances.reduce(function (prev, curr) {
