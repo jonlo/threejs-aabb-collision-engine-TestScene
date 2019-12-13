@@ -18,7 +18,6 @@ class Collisions {
 			collider.userData.transformData = new TransformData(collider);
 		}
 		if (collider instanceof Group) {
-
 			collider.traverse((mesh) => {
 				if ((mesh instanceof Mesh)) {
 					if (!mesh.userData.transformData) {
@@ -69,7 +68,8 @@ class Collisions {
 			distances: [],
 			element: null
 		};
-		this.meshColliders.forEach(collider => {
+		let meshCollidersAtSameLevel = this._getCollidersFromParent(selectedObject);
+		meshCollidersAtSameLevel.forEach(collider => {
 			if (!isSameObject(selectedObject, collider)) {
 				tryToUpdateObject(collider);
 				let distances = { distanceX: 0, distanceY: 0, distanceZ: 0 };
@@ -105,6 +105,7 @@ class Collisions {
 			return false;
 		}
 		if (parent.userData.transformData) {
+			tryToUpdateObject(parent);
 			let objectInside = checkIfObjectInsideObjectBounds(selectedObject, parent);
 			return !objectInside;
 		}

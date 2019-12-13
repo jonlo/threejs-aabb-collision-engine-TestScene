@@ -41,13 +41,12 @@ function setDistancesBetweenObjects(selectedElement, collider, distances) {
 			distances[axis].push(selectedPoints.min - colliderPoints.max);
 		}
 	}
-	console.log(`dx: ${distances[0]}`);
-	console.log(`dy: ${distances[1]}`);
-	console.log(`dz: ${distances[2]}`);
+	// console.log(`dx: ${distances[0]}`);
+	// console.log(`dy: ${distances[1]}`);
+	// console.log(`dz: ${distances[2]}`);
 }
 
 export function getBoundsForElementInAxis(element, axis) {
-	console.log(element);
 	let elementWorldPos = new Vector3();
 	elementWorldPos.setFromMatrixPosition(element.matrixWorld);
 	let elementWidth = (element.userData.transformData.box.max.getComponent(axis) - element.userData.transformData.box.min.getComponent(axis)) / 2;
