@@ -1,0 +1,3 @@
+[submodule "src/threejs-aabb-collision-engine"]
+	path = src/threejs-aabb-collision-engine
+	url = https://github.com/jonlo/threejs-aabb-collision-engine.git
