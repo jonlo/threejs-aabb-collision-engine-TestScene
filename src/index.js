@@ -2,9 +2,9 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { Scene, WebGLRenderer, PerspectiveCamera, GridHelper, Mesh, BoxGeometry, MeshBasicMaterial, Group } from 'three';
-import { InputMouseToScene } from './Input/InputMouseToScene';
-import { Selection } from './Selection/Selection';
-import { CollisionEngine } from './CollisionEngine/CollisionEngine';
+import { InputMouseToScene } from 'threejs-input-mouse2scene';
+import { Selection } from 'threejs-raycast-selection';
+import { CollisionEngine } from 'threejs-aabb-collision-engine';
 
 'use strict';
 
@@ -107,7 +107,7 @@ class Mediator {
 
 		let cube2 = this.createCube(15, 5, 5, Math.random() * 0xffffff);
 		cube2.position.set(0, 30, 0);
-		cube2.name = 'cube_2';
+		cube2.name = 'cube_2';	
 		this.scene.add(cube2);
 		this.collisionEngine.addCollider(cube2);
 

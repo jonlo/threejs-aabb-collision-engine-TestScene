@@ -1,5 +1,5 @@
 {
-  "name": "CollisionEngine",
+  "name": "threejs-aabb-collision-engine-testscene",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -19,11 +19,13 @@
   },
   "homepage": "https://github.com/jonlo/CollisionEngine#readme",
   "devDependencies": {
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7",
-    "serialize-javascript": ">=2.1.1"
+    "serialize-javascript": ">=2.1.1",
+    "webpack": "^4.41.3",
+    "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "three": "^0.108.0"
+    "three": "^0.111.0",
+    "threejs-input-mouse2scene": "^1.0.2",
+    "threejs-raycast-selection": "^1.0.2"
   }
 }
