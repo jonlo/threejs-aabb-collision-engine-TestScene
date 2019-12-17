@@ -4,7 +4,7 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { Scene, WebGLRenderer, PerspectiveCamera, GridHelper, Mesh, BoxGeometry, MeshBasicMaterial, Group } from 'three';
 import { InputMouseToScene } from 'threejs-input-mouse2scene';
 import { Selection } from 'threejs-raycast-selection';
-import { CollisionEngine } from './threejs-aabb-collision-engine/src/CollisionEngine';
+import { CollisionEngine } from './threejs-aabb-collision-engine/CollisionEngine';
 
 'use strict';
 
