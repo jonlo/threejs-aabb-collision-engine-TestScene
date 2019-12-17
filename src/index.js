@@ -34,6 +34,7 @@ class Mediator {
 		let collisionEngineParams = {
 			camera: this.camera,
 			trackAfterCollision: true,
+			snapToBounds : true,
 			snapDistance: 1,
 			resetCallback: () => { this._onEngineReset(); }
 		};
@@ -78,6 +79,8 @@ class Mediator {
 		var group = new Group();
 		group.add(cubeA);
 		group.add(cubeB);
+		cubeA.name = 'group_0';
+		cubeB.name = 'group_1';
 		group.name = 'tetris';
 		group.position.set(-20, 2.5, 0);
 		this.collisionEngine.addCollider(group);
@@ -93,26 +96,26 @@ class Mediator {
 		// }
 
 
-		let cube = this.createCube(15, 5, 5, Math.random() * 0xffffff);
+		let cube = this.createCube(15, 5, 5, 0x0000ff);
 		cube.position.set(0, 7.51, 0);
 		cube.name = 'cube_0';
 		this.scene.add(cube);
 		this.collisionEngine.addCollider(cube);
 
-		let cube1 = this.createCube(15, 5, 5, Math.random() * 0xffffff);
+		let cube1 = this.createCube(15, 5, 5, 0x0000ff);
 		cube1.position.set(0, 2.51, 0);
 		cube1.name = 'cube_1';
 		this.scene.add(cube1);
 		this.collisionEngine.addCollider(cube1);
 
-		let cube2 = this.createCube(15, 5, 5, Math.random() * 0xffffff);
+		let cube2 = this.createCube(15, 5, 5, 0x0000ff);
 		cube2.position.set(0, 30, 0);
-		cube2.name = 'cube_2';	
+		cube2.name = 'cube_2';
 		this.scene.add(cube2);
 		this.collisionEngine.addCollider(cube2);
 
 		var geometry = new BoxGeometry(25, 25, 25);
-		var material = new MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.2 });
+		var material = new MeshBasicMaterial({ color: 0x0000ff, transparent: true, opacity: 0.2 });
 		var parentCube2 = new Mesh(geometry, material);
 		parentCube2.position.set(0, 12.5, 0);
 		parentCube2.name = 'parent';
@@ -121,20 +124,22 @@ class Mediator {
 
 		parentCube2.userData.transformData.addChild(cube);
 		parentCube2.userData.transformData.addChild(cube1);
+
 		// parentCube2.userData.transformData.selectable = false;
 
-		let cube3 = this.createCube(15, 5, 5, Math.random() * 0xffffff);
+		let cube3 = this.createCube(15, 5, 5, 0x0000ff);
 		cube3.position.set(25, 7.51, 0);
 		cube3.name = 'cube3';
 		this.scene.add(cube3);
 		this.collisionEngine.addCollider(cube3);
 
-		let cube4 = this.createCube(15, 5, 5, Math.random() * 0xffffff);
+		let cube4 = this.createCube(15, 5, 5, 0x0000ff);
 		cube4.position.set(25, 2.51, 0);
 		cube4.name = 'cube4';
 		this.scene.add(cube4);
 		this.collisionEngine.addCollider(cube4);
-
+		geometry = new BoxGeometry(25, 25, 25);
+		material = new MeshBasicMaterial({ color: 0x0000ff, transparent: true, opacity: 0.2 });
 		var parentCube3 = new Mesh(geometry, material);
 		parentCube3.position.set(25.01, 12.5, 0);
 		parentCube3.name = 'parentCube3';
@@ -147,8 +152,9 @@ class Mediator {
 		var size = 100;
 		var divisions = 100;
 		var gridHelper = new GridHelper(size, divisions);
-		//this.collisionEngine.addCollider(gridHelper);
-		//gridHelper.userData.transformData.selectable = false;
+		gridHelper.name = 'grid';
+		this.collisionEngine.addCollider(gridHelper);
+		gridHelper.userData.transformData.selectable = false;
 		this.scene.add(gridHelper);
 
 	}
