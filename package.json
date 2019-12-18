@@ -1,31 +1,30 @@
 {
-  "name": "threejs-aabb-collision-engine-testscene",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jonlo/CollisionEngine.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jonlo/CollisionEngine/issues"
-  },
-  "homepage": "https://github.com/jonlo/CollisionEngine#readme",
-  "devDependencies": {
-    "serialize-javascript": ">=2.1.1",
-    "webpack": "^4.41.3",
-    "webpack-cli": "^3.3.10"
-  },
-  "dependencies": {
-    "three": "^0.111.0",
-    "threejs-input-mouse2scene": "^1.0.2",
-    "threejs-raycast-selection": "^1.0.2"
-  }
+	"name": "threejs-aabb-collision-engine-testscene",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "webpack"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/jonlo/CollisionEngine.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/jonlo/CollisionEngine/issues"
+	},
+	"homepage": "https://github.com/jonlo/CollisionEngine#readme",
+	"devDependencies": {
+		"serialize-javascript": ">=2.1.1",
+		"webpack": "^4.41.3",
+		"webpack-cli": "^3.3.10"
+	},
+	"dependencies": {
+		"smaw-event-manager": "^1.0.1",
+		"three": "^0.111.0"
+	}
 }

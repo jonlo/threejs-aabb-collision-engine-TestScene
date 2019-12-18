@@ -2,8 +2,8 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { Scene, WebGLRenderer, PerspectiveCamera, GridHelper, Mesh, BoxGeometry, MeshBasicMaterial, Group } from 'three';
-import { InputMouseToScene } from 'threejs-input-mouse2scene';
-import { Selection } from 'threejs-raycast-selection';
+import { InputMouseToScene } from './threejs-input-mouse2scene/src/InputMouseToScene';
+import { Selection } from './threejs-raycast-selection/src/Selection';
 import { CollisionEngine } from './threejs-aabb-collision-engine/CollisionEngine';
 
 'use strict';
@@ -27,14 +27,18 @@ class Mediator {
 		this.camera.position.set(0, 10, 80);
 		//controls
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-		this.inputMouse = new InputMouseToScene(this.container, this.camera, [this]);
+		this.inputMouse = new InputMouseToScene(this.container, this.camera);
+		this.inputMouse.subscribe('m2sMouseDown', (params) => { this.mouseDown(params); });
+		this.inputMouse.subscribe('m2sMouseUp', (params) => { this.mouseUp(params); });
+		this.inputMouse.subscribe('m2sMouseMove', (params) => { this.mouseMove(params); });
+
 		//controls.update() must be called after any manual changes to the camera's transform
 		this.controls.update();
 		this.oldMousePos = null;
 		let collisionEngineParams = {
 			camera: this.camera,
 			trackAfterCollision: true,
-			snapToBounds : true,
+			snapToBounds: true,
 			snapDistance: 1,
 			resetCallback: () => { this._onEngineReset(); }
 		};
@@ -43,32 +47,32 @@ class Mediator {
 		this.addElements();
 	}
 
-	mouseDown(mousePosScene, mousePosNormalized) {
-		this.selectedCube = this.selection.selectElement(mousePosNormalized, this.collisionEngine.getMeshColliders());
+	mouseDown(params) {
+		this.selectedCube = this.selection.selectElement(params.mouseNormalized, this.collisionEngine.getMeshColliders());
 		if (this.selectedCube) {
 			this.controls.enabled = false;
 		}
 	}
 
-	mouseUp(mousePosScene, mousePosNormalized) {
+	mouseUp(params) {
 		this.selectedCube = null;
 		this.controls.enabled = true;
 		this.collisionEngine.reset();
 		this.oldMousePos = null;
 	}
 
-	mouseMove(mousePosScene, mousePosNormalized) {
+	mouseMove(params) {
 		if (this.selectedCube) {
 			if (!this.oldMousePos) {
-				this.oldMousePos = mousePosScene;
+				this.oldMousePos = params.mousePosInScene;
 			}
 			let deltaMove = {
-				x: this.oldMousePos.x - mousePosScene.x,
-				y: this.oldMousePos.y - mousePosScene.y,
+				x: this.oldMousePos.x - params.mousePosInScene.x,
+				y: this.oldMousePos.y - params.mousePosInScene.y,
 			};
 			this.collisionEngine.translate(this.selectedCube, 0, deltaMove.x);
 			this.collisionEngine.translate(this.selectedCube, 1, deltaMove.y);
-			this.oldMousePos = mousePosScene;
+			this.oldMousePos = params.mousePosInScene;
 		}
 	}
 

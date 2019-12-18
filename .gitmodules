@@ -1,3 +1,9 @@
 [submodule "src/threejs-aabb-collision-engine"]
 	path = src/threejs-aabb-collision-engine
 	url = https://github.com/jonlo/threejs-aabb-collision-engine.git
+[submodule "src/threejs-input-mouse2scene"]
+	path = src/threejs-input-mouse2scene
+	url = https://github.com/jonlo/threejs-input-mouse2scene.git
+[submodule "src/threejs-raycast-selection"]
+	path = src/threejs-raycast-selection
+	url = https://github.com/jonlo/threejs-raycast-selection.git
