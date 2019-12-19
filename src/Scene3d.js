@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import Stats from 'three/examples/jsm/libs/stats.module.js';
-import { Scene, WebGLRenderer, PerspectiveCamera, GridHelper, Mesh, BoxGeometry, MeshBasicMaterial, Group, AmbientLight, DirectionalLight } from 'three';
+import { Scene, WebGLRenderer, PerspectiveCamera, GridHelper, Mesh, BoxGeometry, MeshBasicMaterial, OrthographicCamera, AmbientLight, DirectionalLight } from 'three';
 import { Object3dInteraction } from './Object3dInteraction';
 
 export class Scene3d {
@@ -37,8 +37,16 @@ export class Scene3d {
 	}
 
 	_setCamera() {
+
+		var wid = window.innerWidth;
+		var hei = window.innerHeight;
+		let frustum = 1;
+		var aspect = wid / hei;
+		//this.camera = new OrthographicCamera(frustum * aspect / -2, frustum * aspect / 2, frustum / 2, frustum / -2, 0.5, 100);
+		
 		this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-		this.camera.position.set(0, 10, 5);
+		this.scene.add(this.camera);
+		this.camera.position.set(0, 0, 5);
 	}
 
 	_setInteraction() {

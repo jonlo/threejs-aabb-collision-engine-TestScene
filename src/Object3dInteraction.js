@@ -16,6 +16,7 @@ export class Object3dInteraction {
 		this.scene3d = scene3d;
 		this._setCollisionEngine();
 		this.selection = new Selection(scene3d.camera);
+		this._setInputMouse();
 		this._setControls();
 	}
 
@@ -23,8 +24,7 @@ export class Object3dInteraction {
 		this.controls.update();
 	}
 
-	_setControls() {
-		this.controls = new OrbitControls(this.scene3d.camera, this.scene3d.renderer.domElement);
+	_setInputMouse() {
 		this.inputMouse = new InputMouseToScene(this.scene3d.container, this.scene3d.camera);
 		this.inputMouse.subscribe('m2sMouseDown', (params) => {
 			this._mouseDown(params);
@@ -35,6 +35,12 @@ export class Object3dInteraction {
 		this.inputMouse.subscribe('m2sMouseMove', (params) => {
 			this._mouseMove(params);
 		});
+	}
+
+	_setControls() {
+		this.controls = new OrbitControls(this.scene3d.camera, this.scene3d.renderer.domElement);
+		//this.controls.enableRotate = false;
+
 		this.controls.update();
 		this.oldMousePos = null;
 	}
@@ -44,16 +50,16 @@ export class Object3dInteraction {
 			camera: this.scene3d.camera,
 			trackAfterCollision: true,
 			snapToBounds: true,
-			snapDistance: 1,
-			resetCallback: () => {
-				this._onEngineReset();
-			}
+			snapDistance: 0.05,
+			// resetCallback: () => {
+			// 	this._onEngineReset();
+			// }
 		};
 		this.collisionEngine = new CollisionEngine(collisionEngineParams);
 	}
 
 	_mouseDown(params) {
-		this.selectedCube = this._getRootParent(this.selection.selectElement(params.mouseNormalized, this.collisionEngine.getMeshColliders()));
+		this.selectedCube = this.selection.selectElement(params.mouseNormalized);
 		if (this.selectedCube) {
 			this.controls.enabled = false;
 		}
@@ -72,8 +78,8 @@ export class Object3dInteraction {
 				this.oldMousePos = params.mousePosInScene;
 			}
 			let deltaMove = {
-				x: this.oldMousePos.x - params.mousePosInScene.x,
-				y: this.oldMousePos.y - params.mousePosInScene.y
+				x: (this.oldMousePos.x - params.mousePosInScene.x) ,
+				y: (this.oldMousePos.y - params.mousePosInScene.y) 
 			};
 			this.collisionEngine.translate(this.selectedCube, 0, deltaMove.x);
 			this.collisionEngine.translate(this.selectedCube, 1, deltaMove.y);
