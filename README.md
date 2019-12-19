@@ -1,5 +1,4 @@
-# threejs-aabb-collision-engine
-### simple aabb collision engine for threejs
+# threejs-aabb-collision-engine demo scene
 
 This is a demo scene for the [threejs-aabb-collision-engine package](https://www.npmjs.com/package/threejs-aabb-collision-engine)
 
