@@ -1,197 +1,37 @@
 /* eslint-disable no-unused-vars */
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import Stats from 'three/examples/jsm/libs/stats.module.js';
-import { Scene, WebGLRenderer, PerspectiveCamera, GridHelper, Mesh, BoxGeometry, MeshBasicMaterial, Group } from 'three';
-import { InputMouseToScene } from './threejs-input-mouse2scene/src/InputMouseToScene';
-import { Selection } from './threejs-raycast-selection/src/Selection';
-import { CollisionEngine } from './threejs-aabb-collision-engine/CollisionEngine';
+import { Environment3d } from './Environment3d';
+import { Loader } from './Loader';
+import { Scene3d } from './Scene3d';
+import { Mesh } from 'three';
 
 'use strict';
+init3dEnvironment();
+var environment3d;
+var objLoader = new Loader();
 
-class Mediator {
+function init3dEnvironment() {
+	let container = document.createElement('div');
+	container.id = 'design3dContainer';
+	document.body.appendChild(container);
 
-	constructor() {
-		// dom
-		this.container = document.createElement('div');
-		this.stats = new Stats();
-		this.container.appendChild(this.stats.dom);
-		document.body.appendChild(this.container);
-		// renderer
-		this.renderer = new WebGLRenderer({ antialias: true });
-		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		this.container.appendChild(this.renderer.domElement);
-		// scene
-		this.scene = new Scene();
-		// camera
-		this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-		this.camera.position.set(0, 10, 80);
-		//controls
-		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-		this.inputMouse = new InputMouseToScene(this.container, this.camera);
-		this.inputMouse.subscribe('m2sMouseDown', (params) => { this.mouseDown(params); });
-		this.inputMouse.subscribe('m2sMouseUp', (params) => { this.mouseUp(params); });
-		this.inputMouse.subscribe('m2sMouseMove', (params) => { this.mouseMove(params); });
+	environment3d = new Environment3d(new Scene3d('design3dContainer'));
+	document.addEventListener('dragover', function (event) {
+		event.preventDefault();
+		event.dataTransfer.dropEffect = 'copy';
 
-		//controls.update() must be called after any manual changes to the camera's transform
-		this.controls.update();
-		this.oldMousePos = null;
-		let collisionEngineParams = {
-			camera: this.camera,
-			trackAfterCollision: true,
-			snapToBounds: true,
-			snapDistance: 1,
-			resetCallback: () => { this._onEngineReset(); }
-		};
-		this.collisionEngine = new CollisionEngine(collisionEngineParams);
-		this.selection = new Selection(this.camera);
-		this.addElements();
-	}
+	}, false);
+	document.addEventListener('drop', function (event) {
+		event.preventDefault();
+		objLoader.loadFiles(event.dataTransfer.files, onLoad);
 
-	mouseDown(params) {
-		this.selectedCube = this.selection.selectElement(params.mouseNormalized, this.collisionEngine.getMeshColliders());
-		if (this.selectedCube) {
-			this.controls.enabled = false;
-		}
-	}
-
-	mouseUp(params) {
-		this.selectedCube = null;
-		this.controls.enabled = true;
-		this.collisionEngine.reset();
-		this.oldMousePos = null;
-	}
-
-	mouseMove(params) {
-		if (this.selectedCube) {
-			if (!this.oldMousePos) {
-				this.oldMousePos = params.mousePosInScene;
-			}
-			let deltaMove = {
-				x: this.oldMousePos.x - params.mousePosInScene.x,
-				y: this.oldMousePos.y - params.mousePosInScene.y,
-			};
-			this.collisionEngine.translate(this.selectedCube, 0, deltaMove.x);
-			this.collisionEngine.translate(this.selectedCube, 1, deltaMove.y);
-			this.oldMousePos = params.mousePosInScene;
-		}
-	}
-
-	addElements() {
-		let cubeA = this.createCube(10, 5, 5, 0x00ffff);
-		let cubeB = this.createCube(5, 5, 5, 0x00ffff);
-		cubeB.position.set(-2.5, 5, 0);
-		var group = new Group();
-		group.add(cubeA);
-		group.add(cubeB);
-		cubeA.name = 'group_0';
-		cubeB.name = 'group_1';
-		group.name = 'tetris';
-		group.position.set(-20, 2.5, 0);
-		this.collisionEngine.addCollider(group);
-		this.scene.add(group);
-		// for (let indexX = 0; indexX < 50; indexX++) {
-		// 	for (let indexY = 0; indexY < 50; indexY++) {//Math.random() * 
-		// 		let cube = this.createCube(5, 5, 5, 0x00ff00);
-		// 		cube.position.set((indexX * 5.01), (indexY * 5.01 + 2.5), 0);
-		// 		cube.name = `cube_${indexX}_${indexY}`;
-		// 		this.scene.add(cube);
-		// 		this.transformer.addCollider(cube);
-		// 	}
-		// }
-
-
-		let cube = this.createCube(15, 5, 5, 0x0000ff);
-		cube.position.set(0, 7.51, 0);
-		cube.name = 'cube_0';
-		this.scene.add(cube);
-		this.collisionEngine.addCollider(cube);
-
-		let cube1 = this.createCube(15, 5, 5, 0x0000ff);
-		cube1.position.set(0, 2.51, 0);
-		cube1.name = 'cube_1';
-		this.scene.add(cube1);
-		this.collisionEngine.addCollider(cube1);
-
-		let cube2 = this.createCube(15, 5, 5, 0x0000ff);
-		cube2.position.set(0, 30, 0);
-		cube2.name = 'cube_2';
-		this.scene.add(cube2);
-		this.collisionEngine.addCollider(cube2);
-
-		var geometry = new BoxGeometry(25, 25, 25);
-		var material = new MeshBasicMaterial({ color: 0x0000ff, transparent: true, opacity: 0.2 });
-		var parentCube2 = new Mesh(geometry, material);
-		parentCube2.position.set(0, 12.5, 0);
-		parentCube2.name = 'parent';
-		this.scene.add(parentCube2);
-		this.collisionEngine.addCollider(parentCube2);
-
-		parentCube2.userData.transformData.addChild(cube);
-		parentCube2.userData.transformData.addChild(cube1);
-
-		// parentCube2.userData.transformData.selectable = false;
-
-		let cube3 = this.createCube(15, 5, 5, 0x0000ff);
-		cube3.position.set(25, 7.51, 0);
-		cube3.name = 'cube3';
-		this.scene.add(cube3);
-		this.collisionEngine.addCollider(cube3);
-
-		let cube4 = this.createCube(15, 5, 5, 0x0000ff);
-		cube4.position.set(25, 2.51, 0);
-		cube4.name = 'cube4';
-		this.scene.add(cube4);
-		this.collisionEngine.addCollider(cube4);
-		geometry = new BoxGeometry(25, 25, 25);
-		material = new MeshBasicMaterial({ color: 0x0000ff, transparent: true, opacity: 0.2 });
-		var parentCube3 = new Mesh(geometry, material);
-		parentCube3.position.set(25.01, 12.5, 0);
-		parentCube3.name = 'parentCube3';
-		this.scene.add(parentCube3);
-		this.collisionEngine.addCollider(parentCube3);
-
-		parentCube3.userData.transformData.addChild(cube3);
-		parentCube3.userData.transformData.addChild(cube4);
-
-		var size = 100;
-		var divisions = 100;
-		var gridHelper = new GridHelper(size, divisions);
-		gridHelper.name = 'grid';
-		this.collisionEngine.addCollider(gridHelper);
-		gridHelper.userData.transformData.selectable = false;
-		this.scene.add(gridHelper);
-
-	}
-	_onEngineReset() {
-		this.selectedCube = null;
-	}
-
-	createCube(width, height, depth, color) {
-		var geometry = new BoxGeometry(width, height, depth);
-		var material = new MeshBasicMaterial({ color: color });
-		var cube = new Mesh(geometry, material);
-		return cube;
-	}
-
+	}, false);
 }
 
-function render() {
-	mediator.renderer.render(mediator.scene, mediator.camera);
+function onLoad(object) {
+	environment3d.scene3d.scene.add(object);
+	environment3d.scene3d.object3dInteraction.collisionEngine.addCollider(object);
+	//    object.traverse((mesh) => {
+	//        if (mesh instanceof Mesh) {
+	//        }
+	//    });
 }
-
-function animate() {
-	requestAnimationFrame(animate);
-	mediator.controls.update();
-	render();
-	mediator.stats.update();
-}
-
-function onWindowResize() {
-	mediator.camera.aspect = window.innerWidth / window.innerHeight;
-	mediator.camera.updateProjectionMatrix();
-	mediator.renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-var mediator = new Mediator();
-window.addEventListener('resize', onWindowResize, false);
-animate();
