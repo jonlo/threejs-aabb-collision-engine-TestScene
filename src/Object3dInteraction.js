@@ -8,7 +8,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { InputMouseToScene } from './threejs-input-mouse2scene/src/InputMouseToScene';
 import { Selection } from './threejs-raycast-selection/src/Selection';
 import { CollisionEngine } from './threejs-aabb-collision-engine/CollisionEngine';
-import { Scene, Group } from 'three';
 
 export class Object3dInteraction {
 
@@ -49,7 +48,7 @@ export class Object3dInteraction {
 		let collisionEngineParams = {
 			camera: this.scene3d.camera,
 			trackAfterCollision: true,
-			snapToBounds: true,
+			snapToBounds: false,
 			snapDistance: 0.05,
 			// resetCallback: () => {
 			// 	this._onEngineReset();
