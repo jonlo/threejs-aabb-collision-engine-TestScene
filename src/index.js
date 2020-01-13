@@ -2,9 +2,7 @@
 import { Environment3d } from './Environment3d';
 import { Loader } from './Loader';
 import { Scene3d } from './Scene3d';
-import { Scene, Box3 } from 'three';
-import { Mesh } from 'three';
-
+import { Box3 } from 'three';
 
 'use strict';
 init3dEnvironment();
@@ -40,5 +38,4 @@ function onLoad(object) {
 	environment3d.scene3d.object3dInteraction.collisionEngine.addCollider(object);
 	environment3d.scene3d.object3dInteraction.selection.addSelectableObject(object);
 	
-
 }

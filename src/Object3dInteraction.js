@@ -25,7 +25,7 @@ export class Object3dInteraction {
 	}
 
 	_setInputMouse() {
-		this.inputMouse = new InputMouseToScene(this.scene3d.container, this.scene3d.camera);
+		this.inputMouse = new InputMouseToScene(this.scene3d.container, this.scene3d.camera, this.scene3d.scene);
 		this.inputMouse.subscribe('m2sMouseDown', (params) => {
 			this._mouseDown(params);
 		});
@@ -78,28 +78,15 @@ export class Object3dInteraction {
 				this.oldMousePos = params.mousePosInScene;
 			}
 			let deltaMove = {
-				x: (this.oldMousePos.x - params.mousePosInScene.x) ,
-				y: (this.oldMousePos.y - params.mousePosInScene.y) 
+				x: (params.mousePosInScene.x - this.oldMousePos.x),
+				y: (params.mousePosInScene.y - this.oldMousePos.y),
+				z: (params.mousePosInScene.z - this.oldMousePos.z)
 			};
 			this.collisionEngine.translate(this.selectedCube, 0, deltaMove.x);
 			this.collisionEngine.translate(this.selectedCube, 1, deltaMove.y);
+			this.collisionEngine.translate(this.selectedCube, 2, deltaMove.z);
 			this.oldMousePos = params.mousePosInScene;
 		}
 	}
 
-	_getRootParent(selectedObject) {
-		if (selectedObject && selectedObject.parent && !(selectedObject.parent instanceof Scene)) {
-			let parent = selectedObject.parent;
-			let root = false;
-			while (!root && parent instanceof Group) {
-				if (parent.parent instanceof Group) {
-					parent = parent.parent;
-				} else {
-					root = true;
-				}
-			}
-			return parent;
-		}
-		return selectedObject;
-	}
 }
