@@ -8,6 +8,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { InputMouseToScene } from './threejs-input-mouse2scene/src/InputMouseToScene';
 import { Selection } from './threejs-raycast-selection/src/Selection';
 import { CollisionEngine } from './threejs-aabb-collision-engine/CollisionEngine';
+import { Vector3 } from 'three';
 
 export class Object3dInteraction {
 
@@ -76,11 +77,14 @@ export class Object3dInteraction {
 			if (!this.oldMousePos) {
 				this.oldMousePos = params.mousePosInScene;
 			}
-			let deltaMove = {
-				x: (params.mousePosInScene.x - this.oldMousePos.x),
-				y: (params.mousePosInScene.y - this.oldMousePos.y),
-				z: (params.mousePosInScene.z - this.oldMousePos.z)
-			};
+			let deltaMove = new Vector3(params.mousePosInScene.x - this.oldMousePos.x,params.mousePosInScene.y - this.oldMousePos.y,params.mousePosInScene.z - this.oldMousePos.z);
+			console.log('WORLD');
+			console.log(deltaMove);
+			console.log(this.selectedCube.parent.quaternion);
+			deltaMove = deltaMove.applyQuaternion(this.selectedCube.parent.quaternion);
+			console.log('LOCAL');
+			console.log(deltaMove);
+			console.log('_______');
 			this.collisionEngine.translate(this.selectedCube, 0, deltaMove.x);
 			this.collisionEngine.translate(this.selectedCube, 1, deltaMove.y);
 			this.collisionEngine.translate(this.selectedCube, 2, deltaMove.z);

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import Stats from 'three/examples/jsm/libs/stats.module.js';
-import { Scene, BoxBufferGeometry, WebGLRenderer, PerspectiveCamera, GridHelper, Mesh, BoxGeometry, MeshBasicMaterial, OrthographicCamera, AmbientLight, DirectionalLight } from 'three';
+import { Scene, BoxBufferGeometry, WebGLRenderer, PerspectiveCamera, GridHelper, Mesh, Math, MeshBasicMaterial, OrthographicCamera, AmbientLight, DirectionalLight } from 'three';
 import { Object3dInteraction } from './Object3dInteraction';
 
 export class Scene3d {
@@ -92,7 +92,6 @@ export class Scene3d {
 		parent.userData.transformData.addChild(mesh2);
 		parent.add(mesh2);
 		parent.add(mesh);
-
 	}
 
 	_addLights() {
